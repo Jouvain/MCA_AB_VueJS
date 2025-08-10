@@ -3,6 +3,5 @@
 </script>
 
 <template>
-    <Header></Header>
-    <h1>SQUAD VIEW</h1>
+    <Header title="FACTION NAME -- TODO"></Header>
 </template>

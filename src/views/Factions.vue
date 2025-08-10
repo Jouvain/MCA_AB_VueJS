@@ -3,6 +3,5 @@
 </script>
 
 <template>
-    <Header></Header>
-    <h1>FACTIONS VIEW</h1>
+    <Header title="Choix de la faction"></Header>
 </template>
