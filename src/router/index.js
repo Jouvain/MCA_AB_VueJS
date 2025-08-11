@@ -5,6 +5,11 @@ import Squad from '../views/Squad.vue'
 
 const routes = [
     {
+        path: '/',
+        name: 'home',
+        component: Factions
+    },
+    {
         path: '/factions',
         name: 'factions',
         component: Factions
