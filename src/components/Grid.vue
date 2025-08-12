@@ -16,6 +16,7 @@
 </template>
 
 <style scoped lang="scss">
+@use "../assets/style/variables.scss" as *;
     .grid {
         --spacing: 20px;
         width: 60%;
@@ -23,5 +24,11 @@
         grid-template-columns: 1fr 1fr 1fr 1fr;
         gap: var(--spacing);
         padding: var(--spacing);
+        @media screen and (max-width : $breakpointMax-tablet) {
+            grid-template-columns: 1fr 1fr;
+        }        
+        @media screen and (max-width : $breakpointMax-mobile) {
+            grid-template-columns: 1fr;
+        }
     }
 </style>

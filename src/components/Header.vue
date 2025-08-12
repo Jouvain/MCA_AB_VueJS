@@ -26,12 +26,13 @@ const props = defineProps({
 </template>
 
 <style scoped lang="scss">
+    @use "../assets/style/variables.scss" as *;
     .mca-header {
         &__title {
             font-family: "Exo 2", system-ui, sans-serif;
             font-weight: 600;
             font-size: 24px;
-            color: var(--mca-red);
+            color: $color--mca-red;
             text-align: center;
             margin: 0;
         }
@@ -40,7 +41,7 @@ const props = defineProps({
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            color: #fff;
+            color: $color--light;
             width: 100%;
             box-sizing: border-box;
             padding: 20px 0 0 0;
@@ -76,7 +77,7 @@ const props = defineProps({
         &__headline {
             margin: 0;
             font-size: 16px;
-            color: #fff;
+            color: $color--light
         }
     }
 </style>

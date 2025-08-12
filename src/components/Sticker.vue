@@ -15,8 +15,9 @@
 </template>
 
 <style scoped lang="scss">
+@use "../assets/style/variables.scss" as *;
     .sticker {
-        background-color: var(--mca-red);
+        background-color: $color--mca-red;
         border-radius: 5%;
         display: flex;
         flex-direction: column;
@@ -27,11 +28,11 @@
         &_logo {
             width: 50%;
             height: 50%;
-            color: var(--light);
+            color: $color--light;
         }
 
         &_text {
-            color: var(--light);
+            color: $color--light;
         }
     }
 </style>
