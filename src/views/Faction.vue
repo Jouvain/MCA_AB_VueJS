@@ -3,9 +3,10 @@
     import ProfileSheet from "../components/ProfileSheet.vue";
     import { useRoute } from "vue-router";
     import dataFactions from "../assets/armyBook.json";
-import Trivia from "../components/Trivia.vue";
-import SpecialRules from "../components/SpecialRules.vue";
-import ButtonCTA from "../components/ButtonCTA.vue";
+    import Trivia from "../components/Trivia.vue";
+    import SpecialRules from "../components/SpecialRules.vue";
+    import ButtonCTA from "../components/ButtonCTA.vue";
+import Linker from "../components/Linker.vue";
 
     const route = useRoute();
     const currentSlug = route.params.slug;
@@ -26,7 +27,9 @@ import ButtonCTA from "../components/ButtonCTA.vue";
         </div>
 
         <div class="cta-wrapper">
-            <ButtonCTA />
+            <Linker :to="{name: 'squad', params: {slug: currentSlug}}">
+                <ButtonCTA />
+            </Linker>
         </div>
 
         <SpecialRules :faction="faction" />
@@ -56,12 +59,18 @@ import ButtonCTA from "../components/ButtonCTA.vue";
         justify-content: center;
         align-items: center;
         align-content: center;
+        margin-top: $spacing;
+    }
+    .cta-wrapper{
+        margin: auto;
+        padding: $spacing;
     }    
     .gallery {
         display: grid;
         grid-template-columns: 1fr;
         gap: $spacing;
         width: 100%;
+        margin-bottom: $spacing;
         &_block {
             width: 100%;
             display: flex;
@@ -69,8 +78,5 @@ import ButtonCTA from "../components/ButtonCTA.vue";
             justify-content: center;
         }
     }
-    .cta-wrapper{
-    margin: auto;
-    padding: $spacing;
-    }
+
 </style>
