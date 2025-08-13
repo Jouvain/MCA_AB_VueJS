@@ -15,7 +15,7 @@ const routes = [
         component: Factions
     },
     {
-        path: '/faction',
+        path: '/faction/:slug',
         name: 'faction',
         component: Faction
     },

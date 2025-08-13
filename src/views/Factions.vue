@@ -2,12 +2,19 @@
     import Grid from "../components/Grid.vue";
     import Header from "../components/Header.vue";
     import factionsData from '../assets/armyBook.json';
+
+    const factions = factionsData.factions.map(f => ({
+        ...f,
+        slug:f.name
+    }))
+
 </script>
 
 <template>
     <Header title="Choix de la faction"></Header>
     <main class="main">
-        <Grid :factions="factionsData.factions"></Grid>
+        <!-- <Grid :factions="factionsData.factions"></Grid> -->
+         <Grid :factions="factions" />
     </main>
 </template>
 
