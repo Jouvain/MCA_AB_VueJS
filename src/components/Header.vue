@@ -76,7 +76,8 @@ const props = defineProps({
 
         &__headline {
             margin: 0;
-            font-size: 16px;
+            font-size: 24px;
+            font-weight: 600;
             color: $color--light
         }
     }

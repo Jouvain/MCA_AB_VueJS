@@ -582,7 +582,7 @@
                 {
                     "name": "Soldat de classe Chimère",
                     "type": "infanterie",
-                    "specialRule":"contagion (canon Phénix, canon Phénis lourd)",
+                    "specialRule":"contagion (canon Phénix, canon Phénix lourd)",
                     "rank": 2,
                     "move": 20,
                     "endurance": 6,
@@ -607,7 +607,7 @@
                 {
                     "name": "Soldat de classe Chimère avec canon Phénix lourd",
                     "type": "infanterie",
-                    "specialRule":"contagion (canon Phénix, canon Phénis lourd)",
+                    "specialRule":"contagion (canon Phénix, canon Phénix lourd)",
                     "rank": 2,
                     "move": 20,
                     "endurance": 6,

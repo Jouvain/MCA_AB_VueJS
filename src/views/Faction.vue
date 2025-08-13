@@ -3,6 +3,8 @@
     import ProfileSheet from "../components/ProfileSheet.vue";
     import { useRoute } from "vue-router";
     import dataFactions from "../assets/armyBook.json";
+import Trivia from "../components/Trivia.vue";
+import SpecialRules from "../components/SpecialRules.vue";
 
     const route = useRoute();
     const currentSlug = route.params.slug;
@@ -13,20 +15,48 @@
 
 <template>
     <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
-    <div class="gallery">
-        <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
-            <ProfileSheet :profile="profile" />
+    
+    <main class="main">
+
+
+
+        <div class="trivia-wrapper">
+            <Trivia :faction="faction" />
         </div>
-    </div>
+
+        <SpecialRules :faction="faction" />
+
+        <div class="gallery">
+            <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
+                <ProfileSheet :profile="profile" />
+            </div>
+        </div>
+    </main>
+    
+
 </template>
 
 <style scoped lang="scss">
-    @use "../assets/style/variables.scss" as *;    
+    @use "../assets/style/variables.scss" as *;
+
+    .main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .trivia-wrapper {
+        display: flex;
+        width: 80%;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+    }    
     .gallery {
         display: grid;
         grid-template-columns: 1fr;
         gap: $spacing;
-        padding: $spacing;
+        width: 100%;
         &_block {
             width: 100%;
             display: flex;
