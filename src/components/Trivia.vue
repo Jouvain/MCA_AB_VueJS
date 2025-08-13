@@ -14,13 +14,13 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     @use "../assets/style/variables.scss" as *;
     .trivia {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        margin: $spacing 0;
+        margin: auto;
         &_logo {
             height: 80px;
             color: $color--mca-red;

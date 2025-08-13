@@ -5,6 +5,7 @@
     import dataFactions from "../assets/armyBook.json";
 import Trivia from "../components/Trivia.vue";
 import SpecialRules from "../components/SpecialRules.vue";
+import ButtonCTA from "../components/ButtonCTA.vue";
 
     const route = useRoute();
     const currentSlug = route.params.slug;
@@ -22,6 +23,10 @@ import SpecialRules from "../components/SpecialRules.vue";
 
         <div class="trivia-wrapper">
             <Trivia :faction="faction" />
+        </div>
+
+        <div class="cta-wrapper">
+            <ButtonCTA />
         </div>
 
         <SpecialRules :faction="faction" />
@@ -63,5 +68,9 @@ import SpecialRules from "../components/SpecialRules.vue";
             flex-direction: row;
             justify-content: center;
         }
+    }
+    .cta-wrapper{
+    margin: auto;
+    padding: $spacing;
     }
 </style>
