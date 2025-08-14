@@ -3,8 +3,14 @@
         profile: {
             type: Object,
             required: true
+        },
+        mode: {
+            type: String,
+            default: undefined
         }
-    })
+    });
+
+    const emit = defineEmits(['add', 'edit']);
 </script>
 
 <template>
@@ -18,6 +24,12 @@
                 <img v-else src="/img/rank-3_White.svg" alt="a logo with as many stripes as the rank" class="ps_rank"/>
                 <span>{{ profile.cost }}</span>
                 <img src="/img/credits-currency_White.svg" alt="a logo with the stylized acronym Global Credit" class="ps_rank" />
+                <button v-if="mode === 'add' " @click="emit('add', profile)" class="ps_button">
+                    <img src="/img/health-normal.svg" />
+                </button>
+                <button v-if="mode === 'edit' " @click="emit('edit', profile)" class="ps_button">
+                    <img src="/img/pencil.svg" />
+                </button>
             </div>
         </header>
         <section class="ps_section ps_core">
@@ -120,6 +132,23 @@
         }
         &_trivia {
             margin-left: $spacing;
+        }
+        &_button {
+            background-color: $color--light;
+            height: 35px;
+            width: 35px;
+            position: relative;
+            border: 1px groove $color--mca-secondary;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: $spacing;
+            img {
+                position: absolute;
+                height: 20px;
+                width: 20px;
+                top: 7px;
+                left: 7px;
+            }
         }
     }
 

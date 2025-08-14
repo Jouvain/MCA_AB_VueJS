@@ -6,12 +6,15 @@
     import Trivia from "../components/Trivia.vue";
     import SpecialRules from "../components/SpecialRules.vue";
     import ButtonCTA from "../components/ButtonCTA.vue";
-import Linker from "../components/Linker.vue";
+    import Linker from "../components/Linker.vue";
 
     const route = useRoute();
     const currentSlug = route.params.slug;
-
     const faction = dataFactions.factions.find(f => f.name === currentSlug);
+
+    function testBtn() {
+        console.log("Bouton cliqué, ça marche");
+    }
 
 </script>
 
@@ -36,7 +39,7 @@ import Linker from "../components/Linker.vue";
 
         <div class="gallery">
             <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
-                <ProfileSheet :profile="profile" />
+                <ProfileSheet :profile="profile"  mode="" @add="testBtn" @edit="testBtn"/>
             </div>
         </div>
     </main>
