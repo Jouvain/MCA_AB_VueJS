@@ -4,13 +4,14 @@
     import { useRoute } from "vue-router";
     import { ref, computed } from "vue";
     import dataFactions from "../assets/armyBook.json";
+import Resume from "../components/Resume.vue";
     
     const route = useRoute();
     const currentSlug = route.params.slug;
     const faction = dataFactions.factions.find(f => f.name === currentSlug);
 
     const squad = ref({
-        name: '',
+        name: 'Escouade anonyme',
         mode: 'STANDARD',
         profiles: []
     })
@@ -31,13 +32,22 @@
         profile.grade = 0;
         profile.specialRoles = [];
     }
+    function modifySquadname(newName) {
+        squad.value.name = newName;
+    }
 
+    const squadName = ref('Escouade Alpha')
+    const squadCost = ref(0)
 
 
 </script>
 
 <template>
     <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
+
+    <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
+
+
     <section class="panels">
         <div class="panels_wrapper">
             <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
