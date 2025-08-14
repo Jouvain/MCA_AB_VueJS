@@ -10,7 +10,7 @@
         }
     });
 
-    const emit = defineEmits(['add', 'edit']);
+    const emit = defineEmits(['add', 'edit', 'delete']);
 </script>
 
 <template>
@@ -18,7 +18,11 @@
         <header class="ps_header">
             <h3 class="ps_title">{{ profile.name }}</h3>
             <div class="ps_headband">
-                <span>{{ profile.type }}</span>
+                <button v-if="mode === 'edit' " @click="emit('edit', profile)" class="ps_button ps_button--left">
+                    <img src="/img/pencil.svg" />
+                </button>
+                <img v-if="profile.type === 'infanterie' " src="/img/run_White.svg" alt="a logo of a running man" class="ps_rank"/>
+                <img v-else src="/img/tank_White.svg" alt="a logo of a tank" class="ps_rank"/>
                 <img v-if="profile.rank === 1" src="/img/rank-1_White.svg" alt="a logo with as many stripes as the rank" class="ps_rank"/>
                 <img v-else-if="profile.rank === 2" src="/img/rank-2_White.svg" alt="a logo with as many stripes as the rank" class="ps_rank"/>
                 <img v-else src="/img/rank-3_White.svg" alt="a logo with as many stripes as the rank" class="ps_rank"/>
@@ -27,8 +31,8 @@
                 <button v-if="mode === 'add' " @click="emit('add', profile)" class="ps_button">
                     <img src="/img/health-normal.svg" />
                 </button>
-                <button v-if="mode === 'edit' " @click="emit('edit', profile)" class="ps_button">
-                    <img src="/img/pencil.svg" />
+                <button v-if="mode === 'edit' " @click="emit('delete', profile)" class="ps_button">
+                    <img src="/img/cancel.svg" />
                 </button>
             </div>
         </header>
@@ -142,6 +146,9 @@
             cursor: pointer;
             border-radius: 5px;
             margin-left: $spacing;
+            &--left {
+                margin-right: $spacing;
+            }
             img {
                 position: absolute;
                 height: 20px;
