@@ -53,6 +53,11 @@ import { ref, watch } from 'vue';
 <template>
     <article class="ps">
         <header class="ps_header">
+            <div v-if="profile.grade >= 1" class="ps_grade">
+                <img v-if="profile.grade >= 1" src="/img/star1_White.svg" class="ps_stars"/>
+                <img v-if="profile.grade >= 2" src="/img/star1_White.svg" class="ps_stars"/>
+                <img v-if="profile.grade >= 3" src="/img/star1_White.svg" class="ps_stars"/>
+            </div>
             <h3 class="ps_title">{{ profile.name }}</h3>
             <div class="ps_headband">
                 <button v-if="mode === 'edit' " @click="isEditing = !isEditing" class="ps_button ps_button--left">
@@ -153,8 +158,17 @@ import { ref, watch } from 'vue';
         border-radius: 5px;
         border: 2px solid $color--mca-red;
         width: 80%;
+        position: relative;
         @media screen and (max-width: $breakpointMax-mobile) {
             font-size: small;
+        }
+        &_grade {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+        }
+        &_stars {
+            height: 35px;
         }
         &_header {
             display: flex;
@@ -210,11 +224,6 @@ import { ref, watch } from 'vue';
                     padding: 5px;
                     cursor: pointer;
                     font-weight: bold;
-                }
-            }
-            &--special {
-                select {
-
                 }
             }
         }
