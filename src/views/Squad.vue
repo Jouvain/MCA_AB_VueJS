@@ -20,10 +20,16 @@
     })
 
     function addProfile(profile) {
+        profile.archive = profile.name;
         squad.value.profiles.push({...profile});
     }
     function removeProfile(index) {
         squad.value.profiles.splice(index, 1);
+    }
+    function resetProfile(profile) {
+        profile.name = profile.archive;
+        profile.grade = 0;
+        profile.specialRoles = [];
     }
 
 
@@ -40,7 +46,7 @@
         </div>
         <div class="panels_wrapper">
             <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)"/>
+                <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)"/>
             </div>
         </div>
     </section>

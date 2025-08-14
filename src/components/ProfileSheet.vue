@@ -1,4 +1,6 @@
 <script setup>
+import { ref, watch } from 'vue';
+
     const props = defineProps({
         profile: {
             type: Object,
@@ -7,10 +9,45 @@
         mode: {
             type: String,
             default: undefined
+        },
+        index: {
+            type: Number,
+            default: undefined
+        },
+        specialtyOptions: {
+            type: Array,
+            default: () => []
+        },
+        canGrade: {
+            type: Boolean,
+            default: true
+        },
+        roles: {
+            type: Array
         }
     });
 
-    const emit = defineEmits(['add', 'edit', 'delete']);
+    const emit = defineEmits(['add', 'edit', 'delete', 'reset']);
+
+    const isEditing = ref(false);
+    const localGrade = ref(props.profile.grade ?? 0);
+    const localSpecs = ref(props.profile.specialties ?? []);
+
+    watch(() => props.profile, (p) => {
+        localGrade.value = p?.grade ?? 0
+        localSpecs.value = p?.specialties ?? []
+    }, {deep: true});
+
+
+    function save() {
+        emit('update', {
+            index: props.index,
+            grade: localGrade.value,
+            specialties: localSpecs.value
+        });
+        isEditing.value = false;
+    }
+
 </script>
 
 <template>
@@ -18,7 +55,7 @@
         <header class="ps_header">
             <h3 class="ps_title">{{ profile.name }}</h3>
             <div class="ps_headband">
-                <button v-if="mode === 'edit' " @click="emit('edit', profile)" class="ps_button ps_button--left">
+                <button v-if="mode === 'edit' " @click="isEditing = !isEditing" class="ps_button ps_button--left">
                     <img src="/img/pencil.svg" />
                 </button>
                 <img v-if="profile.type === 'infanterie' " src="/img/run_White.svg" alt="a logo of a running man" class="ps_rank"/>
@@ -36,6 +73,33 @@
                 </button>
             </div>
         </header>
+        <section v-if="mode === 'edit' && isEditing" class="ps_edition">
+            <div class="ps_form ps_form--grade">
+                <label>Grade : </label>
+                <select v-model="profile.grade" :disabled="profile.type !== 'infanterie' || (!canGrade && localGrade === 0) " >
+                    <option :value="0"> - </option>
+                    <option :value="1"> 1 </option>
+                    <option :value="2"> 2 </option>
+                    <option :value="3"> 3 </option>
+                </select>
+                <small v-if="profile.type !== 'infanterie' ">Impossible de grader</small>
+                <small v-else-if="!canGrade && localGrade === 0">Limite de grades atteinte</small>
+            </div>
+            <div class="ps_form ps_form--id">
+                <label>Nom : </label>
+                <input type="text" v-model="profile.name" />
+            </div>
+            <div class="ps_form ps_form--special">
+                <label>Spécialité : </label>
+                <select v-model="profile.specialRoles">
+                    <option v-for="role in roles" :key="role" :value="role" @click.prevent="test">{{ role }}</option>
+                </select>
+            </div>
+            <div class="ps_form ps_form--action">
+                <button @click="emit('reset', profile)">RESET</button>
+            </div>
+
+        </section>
         <section class="ps_section ps_core">
             <table class="ps_table">
                 <thead class="ps_thead">
@@ -55,7 +119,9 @@
         </section>
         <section class="ps_section ps_trivia">
             <strong>Règles : </strong>
-            <span>{{ profile.specialRule }}</span>
+            <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
+            <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
+            <span v-else>{{ profile.specialRule }}</span>
         </section>
         <section class="ps_section ps_weapons">
             <table class="ps_table">
@@ -118,6 +184,39 @@
         }
         &_section {
             width: 100%;
+        }
+        &_edition {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            padding: $spacing 0 $spacing $spacing;
+        }
+        &_form {
+            label {
+                font-weight: bold;
+                color: $color--mca-red;
+            }
+            &--action {
+                display: flex;
+                justify-content: center;
+                padding-top: $spacing;
+                width: 100%;
+                button {
+                    background-color: $color--mca-red;
+                    color: $color--light;
+                    border: none;
+                    border-radius: 5%;
+                    padding: 5px;
+                    cursor: pointer;
+                    font-weight: bold;
+                }
+            }
+            &--special {
+                select {
+
+                }
+            }
         }
         &_thead {
             background-color: $color--mca-secondary;
