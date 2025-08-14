@@ -71,6 +71,9 @@
         border-radius: 5px;
         border: 2px solid $color--mca-red;
         width: 80%;
+        @media screen and (max-width: $breakpointMax-mobile) {
+            font-size: small;
+        }
         &_header {
             display: flex;
             flex-direction: row;
@@ -78,6 +81,10 @@
             background-color: $color--mca-red;
             color: $color--light;
             width: 100%;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
         &_title {
             margin-left: $spacing;
@@ -87,7 +94,11 @@
             align-items: center;
             justify-content: space-around;
             margin-right: $spacing;
-            width: 20%;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                justify-content: center;
+                width: 100%;
+                margin-bottom: $spacing;
+            }
         }
         &_section {
             width: 100%;

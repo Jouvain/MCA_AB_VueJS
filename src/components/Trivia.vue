@@ -21,6 +21,9 @@
         justify-content: space-around;
         align-items: center;
         margin: auto;
+        @media screen and (max-width: $breakpointMax-mobile) {
+            flex-direction: column;
+        }
         &_logo {
             height: 80px;
             color: $color--mca-red;
