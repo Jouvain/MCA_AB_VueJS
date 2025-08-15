@@ -52,7 +52,11 @@ import { computed, ref, watch } from 'vue';
     }
 
     const effectiveCost = computed( () => {
-        return props.profile.cost + (props.profile.grade ?? 0);
+        let specialtyCost = 0;
+        if(props.profile.specialRoles.length > 0) {
+            specialtyCost = 1;
+        }
+        return props.profile.cost + (props.profile.grade ?? 0) + specialtyCost;
     });
 
 </script>
