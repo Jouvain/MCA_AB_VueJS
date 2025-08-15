@@ -18,7 +18,12 @@
         const allOtherFactions = dataFactions.factions.filter(f => f.name !== "Fortune");
 
         const combinedProfiles = allOtherFactions.flatMap(f => f.profiles || []);
-        const combinedSpecialties = allOtherFactions.flatMap(f => f.specialties || []);
+        // const combinedSpecialties = allOtherFactions.flatMap(f => f.specialties || []);
+        const combinedSpecialties = Array.from(
+            new Set(
+                allOtherFactions.flatMap(f => f.specialties || [])
+            )
+        );
 
         // On crée une version étendue de Fortune sans toucher au JSON source
         faction = {
@@ -217,6 +222,18 @@
     // }
 
 
+    function printNative() {
+        const printable = printArea.value;
+        if (!printable) return;
+
+        printable.style.display = "block";
+
+        window.print();
+
+        printable.style.display = "none";
+    }
+
+
 </script>
 
 <template>
@@ -257,6 +274,8 @@
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
                     <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
                     <p> *** </p>
+                        <!-- Spacer forcé toutes les 3 cartes -->
+                        <div v-if="(i + 1) % 3 === 0" class="force-break"></div>
                 </div>
             <!-- </div> -->
         </div>
@@ -340,6 +359,11 @@
                 width: 100%;
             }
         }
+        .gallery_block {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
     }
 
     .printable {
@@ -348,6 +372,12 @@
         box-sizing: border-box;
         display: none;
     }
+    .force-break {
+        display: block;
+        page-break-before: always;
+        height: 100px; /* nécessaire pour que html2canvas le prenne en compte */
+        visibility: hidden;
+    }    
 
 
 </style>

@@ -314,6 +314,8 @@ import { computed, ref, watch } from 'vue';
     @media print {
         .ps {
             width: 100% !important;
+            break-inside: avoid;
+            page-break-inside: avoid;            
         }
     }
 
