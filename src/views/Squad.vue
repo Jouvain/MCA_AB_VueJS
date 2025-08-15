@@ -42,7 +42,7 @@ import Resume from "../components/Resume.vue";
         squad.value.name = newName;
     }
 
-    const squadName = ref('Escouade Alpha')
+    const squadName = ref('Escouade ' + faction.name)
     const squadCost = ref(0)
 
 
