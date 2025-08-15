@@ -29,6 +29,7 @@ import Resume from "../components/Resume.vue";
 
     function addProfile(profile) {
         profile.archive = profile.name;
+        profile.equipment = [];
         squad.value.profiles.push({...profile});
     }
     function removeProfile(index) {

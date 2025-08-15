@@ -108,10 +108,17 @@ import { computed, ref, watch } from 'vue';
                 </select>
             </div>
             <div class="ps_form ps_form--equipment">
-                <label>Équipement :</label>
-                <select v-model="profile.equipment" multiple >
-                    <option v-for="item in items" :key="item.name" :value="item">{{ item }}</option>
-                </select>
+                <label>Équipement :</label>                  
+                    <div class="checkbox-list">
+                        <label v-for="item in items" :key="item" class="checkbox-item">
+                        <input
+                            type="checkbox"
+                            :value="item"
+                            v-model="profile.equipment"
+                        />
+                        {{ item }}
+                        </label>
+                    </div>
             </div>
             <div class="ps_form ps_form--action">
                 <button @click="emit('reset', profile)">RESET</button>
@@ -279,6 +286,19 @@ import { computed, ref, watch } from 'vue';
                 left: 7px;
             }
         }
+    }
+
+    .checkbox-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        max-width: 100%;
+    }   
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
 
 </style>
