@@ -1,4 +1,19 @@
 {
+  "items": [
+    "Balles traçantes", 
+    "Bouclier", 
+    "Camouflage", 
+    "Fumigènes", 
+    "Surcharge IEM", 
+    "Grenade IEM", 
+    "Grenade sonique", 
+    "Munitions perforantes", 
+    "Pisto-grappin", 
+    "Radio",
+    "Réacteur dorsal",
+    "Système de survie",
+    "Viseur" 
+  ],
   "factions": [
     {
       "name": "Domination",

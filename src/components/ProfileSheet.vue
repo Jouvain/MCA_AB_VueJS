@@ -24,6 +24,9 @@ import { computed, ref, watch } from 'vue';
         },
         roles: {
             type: Array
+        },
+        items: {
+            type: Array
         }
     });
 
@@ -104,6 +107,12 @@ import { computed, ref, watch } from 'vue';
                     <option v-for="role in roles" :key="role" :value="role" @click.prevent="test">{{ role }}</option>
                 </select>
             </div>
+            <div class="ps_form ps_form--equipment">
+                <label>Équipement :</label>
+                <select v-model="profile.equipment" multiple >
+                    <option v-for="item in items" :key="item.name" :value="item">{{ item }}</option>
+                </select>
+            </div>
             <div class="ps_form ps_form--action">
                 <button @click="emit('reset', profile)">RESET</button>
             </div>
@@ -131,6 +140,7 @@ import { computed, ref, watch } from 'vue';
             <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
             <span v-else>{{ profile.specialRule }}</span>
+            <span v-for="equipment in profile.equipment"> &nbsp {{ equipment }}</span>
         </section>
         <section class="ps_section ps_weapons">
             <table class="ps_table">

@@ -9,6 +9,7 @@ import Resume from "../components/Resume.vue";
     const route = useRoute();
     const currentSlug = route.params.slug;
     const faction = dataFactions.factions.find(f => f.name === currentSlug);
+    const items = dataFactions.items;
 
     const squad = ref({
         name: 'Escouade anonyme',
@@ -23,7 +24,7 @@ import Resume from "../components/Resume.vue";
             p.specialRoles.length > 0 ? specialCost = 1 : specialCost = 0;
             const gradeCost = p.grade ?? 0;
             return sum + p.cost + gradeCost + specialCost;
-        }, 0);
+        }, 0) + getEquipmentCost();
     });
 
     function addProfile(profile) {
@@ -37,9 +38,33 @@ import Resume from "../components/Resume.vue";
         profile.name = profile.archive;
         profile.grade = 0;
         profile.specialRoles = [];
+        profile.equipment = [];
     }
     function modifySquadname(newName) {
         squad.value.name = newName;
+    }
+
+    function getEquipmentCost() {
+        let points = 0;
+        let distributed = 0;
+
+        squad.value.profiles.forEach( p => {
+            const count = p.equipment?.length ?? 0;
+            const rank = p.rank ?? 1;
+
+            if(count > 0) {
+                if(rank === 1) {
+                    distributed += count / 3;
+                } else if (rank === 2) {
+                    distributed += count / 2;
+                } else {
+                    distributed += count / 1;
+                }
+            }
+        });
+
+        points = Math.ceil(distributed);
+        return points;
     }
 
     const squadName = ref('Escouade ' + faction.name)
@@ -63,7 +88,7 @@ import Resume from "../components/Resume.vue";
         </div>
         <div class="panels_wrapper">
             <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)"/>
+                <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
             </div>
         </div>
     </section>
