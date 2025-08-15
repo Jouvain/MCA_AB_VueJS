@@ -19,8 +19,10 @@ import Resume from "../components/Resume.vue";
     const totalCost = computed(() => {
         // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
         return squad.value.profiles.reduce( (sum, p) => {
+            let specialCost;
+            p.specialRoles.length > 0 ? specialCost = 1 : specialCost = 0;
             const gradeCost = p.grade ?? 0;
-            return sum + p.cost + gradeCost;
+            return sum + p.cost + gradeCost + specialCost;
         }, 0);
     });
 
