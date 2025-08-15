@@ -85,24 +85,63 @@
         window.removeEventListener('resize', updateIsMobile);
     });
 
-    function print () {
+    function preloadImages(element) {
+        const images = element.querySelectorAll("img");
+        const promises = [];
+
+        images.forEach(img => {
+            if (!img.complete) {
+                promises.push(
+                    new Promise(resolve => {
+                        img.onload = img.onerror = resolve;
+                    })
+                );
+            }
+        });
+
+        return Promise.all(promises);
+    }
+
+    async function print() {
         const element = printArea.value;
-        if(!element) return;
+        if (!element) return;
 
         element.style.display = "block";
+
+        await preloadImages(element); // 👈 attend que toutes les images soient chargées
 
         const opt = {
             margin: 0.2,
             filename: squad.value.name + '.pdf',
-            image: {type: 'jpeg', quality: 0.98},
-            html2canvas: {scale: 2},
-            jsPDF: {unit: 'in', format: 'letter', orientation: 'portrait'}
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
 
-        html2pdf().set(opt).from(element).save().then( () => {
+        html2pdf().set(opt).from(element).save().then(() => {
             element.style.display = "none";
         });
     }
+
+
+    // function print () {
+    //     const element = printArea.value;
+    //     if(!element) return;
+
+    //     element.style.display = "block";
+
+    //     const opt = {
+    //         margin: 0.2,
+    //         filename: squad.value.name + '.pdf',
+    //         image: {type: 'jpeg', quality: 0.98},
+    //         html2canvas: {scale: 2},
+    //         jsPDF: {unit: 'in', format: 'letter', orientation: 'portrait'}
+    //     };
+
+    //     html2pdf().set(opt).from(element).save().then( () => {
+    //         element.style.display = "none";
+    //     });
+    // }
 
 
 </script>
