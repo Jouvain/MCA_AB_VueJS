@@ -85,12 +85,58 @@
         window.removeEventListener('resize', updateIsMobile);
     });
 
+    // function preloadImages(element) {
+    //     const images = element.querySelectorAll("img");
+    //     const promises = [];
+
+    //     images.forEach(img => {
+    //         if (!img.complete) {
+    //             promises.push(
+    //                 new Promise(resolve => {
+    //                     img.onload = img.onerror = resolve;
+    //                 })
+    //             );
+    //         }
+    //     });
+
+    //     return Promise.all(promises);
+    // }
+
     function preloadImages(element) {
         const images = element.querySelectorAll("img");
         const promises = [];
 
         images.forEach(img => {
-            if (!img.complete) {
+            const isSVG = img.src.endsWith(".svg") || img.src.includes(".svg");
+
+            if (isSVG) {
+                // Convertir en PNG via canvas
+                promises.push(
+                    new Promise(resolve => {
+                        const svgImg = new Image();
+                        svgImg.crossOrigin = "anonymous";
+                        svgImg.src = img.src;
+
+                        svgImg.onload = () => {
+                            const canvas = document.createElement("canvas");
+                            canvas.width = svgImg.width || 64;
+                            canvas.height = svgImg.height || 64;
+                            const ctx = canvas.getContext("2d");
+                            ctx.drawImage(svgImg, 0, 0);
+
+                            // Remplacer le src de l'image originale par un PNG base64
+                            img.src = canvas.toDataURL("image/png");
+                            resolve();
+                        };
+
+                        svgImg.onerror = () => {
+                            console.warn("Échec de chargement SVG :", img.src);
+                            resolve();
+                        };
+                    })
+                );
+            } else if (!img.complete) {
+                // Image classique, attendre son chargement
                 promises.push(
                     new Promise(resolve => {
                         img.onload = img.onerror = resolve;
@@ -101,6 +147,11 @@
 
         return Promise.all(promises);
     }
+
+
+    
+
+
 
     async function print() {
         const element = printArea.value;
