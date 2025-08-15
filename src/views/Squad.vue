@@ -4,8 +4,10 @@
     import { useRoute } from "vue-router";
     import { ref, computed, onMounted, onUnmounted } from "vue";
     import dataFactions from "../assets/armyBook.json";
-import Resume from "../components/Resume.vue";
-    
+    import Resume from "../components/Resume.vue";
+    import html2pdf from "html2pdf.js";
+
+    const printArea = ref(null);
     const route = useRoute();
     const currentSlug = route.params.slug;
     const faction = dataFactions.factions.find(f => f.name === currentSlug);
@@ -83,34 +85,71 @@ import Resume from "../components/Resume.vue";
         window.removeEventListener('resize', updateIsMobile);
     });
 
+    function print () {
+        const element = printArea.value;
+        if(!element) return;
 
+        element.style.display = "block";
+
+        const opt = {
+            margin: 0.2,
+            filename: squad.value.name + '.pdf',
+            image: {type: 'jpeg', quality: 0.98},
+            html2canvas: {scale: 2},
+            jsPDF: {unit: 'in', format: 'letter', orientation: 'portrait'}
+        };
+
+        html2pdf().set(opt).from(element).save().then( () => {
+            element.style.display = "none";
+        });
+    }
 
 
 </script>
 
 <template>
-    <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
+    
+        <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
 
-    <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
-
-    <div class="mobile-toggle" v-if="isMobile">
-        <button @click="activePanel = (activePanel === 'faction' ? 'roster' : 'faction')">
-            {{ activePanel === 'faction' ? '→ Escouade' : '← Faction' }}
-        </button>
-    </div>
-
-    <section class="panels">
-        <div class="panels_wrapper" v-show="!isMobile || activePanel === 'faction' ">
-            <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
-                <ProfileSheet :profile="profile"  mode="add" @add="addProfile(profile)"/>
-            </div>
+        <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
+        <div class="print">
+            <button class="print_btn" @click="print">&#x1F5A8</button>
         </div>
-        <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
-            <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
-            </div>
+
+
+        <div class="mobile-toggle" v-if="isMobile">
+            <button @click="activePanel = (activePanel === 'faction' ? 'roster' : 'faction')">
+                {{ activePanel === 'faction' ? '→ Escouade' : '← Faction' }}
+            </button>
         </div>
-    </section>
+
+        <section class="panels">
+            <div class="panels_wrapper" v-show="!isMobile || activePanel === 'faction' ">
+                <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
+                    <ProfileSheet :profile="profile"  mode="add" @add="addProfile(profile)"/>
+                </div>
+            </div>
+            <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
+                <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
+                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <div ref="printArea" class="printable">
+            <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
+            <!-- <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " > -->
+                <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
+                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
+                    <p> *** </p>
+                </div>
+            <!-- </div> -->
+        </div>
+    
+
 
 </template>
 
@@ -160,5 +199,43 @@ import Resume from "../components/Resume.vue";
             }
         }
     }
+    .print {
+        display: flex;
+        justify-content: center;
+        margin: $spacing;
+        &_btn {
+            background-color: $color--mca-red;
+            color: $color--light;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            width: 60px;
+            font-size: xx-large;
+            cursor: pointer;
+        }
+    }
+
+    @media print {
+        .mobile-toggle,
+        .panels_wrapper:first-child,
+        .print {
+            display: none;
+        }
+        .panels_wrapper {
+            width: 100%;
+            flex-direction: column;
+            div {
+                width: 100%;
+            }
+        }
+    }
+
+    .printable {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: none;
+    }
+
 
 </style>

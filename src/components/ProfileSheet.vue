@@ -301,4 +301,16 @@ import { computed, ref, watch } from 'vue';
         gap: 4px;
     }
 
+    .printable {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: none;
+    }
+    @media print {
+        .ps {
+            width: 100% !important;
+        }
+    }
+
 </style>
