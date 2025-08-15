@@ -17,8 +17,12 @@ import Resume from "../components/Resume.vue";
     })
 
     const totalCost = computed(() => {
-        return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
-    })
+        // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
+        return squad.value.profiles.reduce( (sum, p) => {
+            const gradeCost = p.grade ?? 0;
+            return sum + p.cost + gradeCost;
+        }, 0);
+    });
 
     function addProfile(profile) {
         profile.archive = profile.name;
@@ -38,6 +42,7 @@ import Resume from "../components/Resume.vue";
 
     const squadName = ref('Escouade Alpha')
     const squadCost = ref(0)
+
 
 
 </script>

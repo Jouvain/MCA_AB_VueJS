@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
     const props = defineProps({
         profile: {
@@ -48,6 +48,10 @@ import { ref, watch } from 'vue';
         isEditing.value = false;
     }
 
+    const effectiveCost = computed( () => {
+        return props.profile.cost + (props.profile.grade ?? 0);
+    });
+
 </script>
 
 <template>
@@ -68,7 +72,7 @@ import { ref, watch } from 'vue';
                 <img v-if="profile.rank === 1" src="/img/rank-1_White.svg" alt="a logo with as many stripes as the rank" class="ps_rank"/>
                 <img v-else-if="profile.rank === 2" src="/img/rank-2_White.svg" alt="a logo with as many stripes as the rank" class="ps_rank"/>
                 <img v-else src="/img/rank-3_White.svg" alt="a logo with as many stripes as the rank" class="ps_rank"/>
-                <span>{{ profile.cost }}</span>
+                <span>{{ effectiveCost }}</span>
                 <img src="/img/credits-currency_White.svg" alt="a logo with the stylized acronym Global Credit" class="ps_rank" />
                 <button v-if="mode === 'add' " @click="emit('add', profile)" class="ps_button">
                     <img src="/img/health-normal.svg" />
