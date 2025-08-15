@@ -2,7 +2,7 @@
     import Header from "../components/Header.vue"
     import ProfileSheet from "../components/ProfileSheet.vue";
     import { useRoute } from "vue-router";
-    import { ref, computed } from "vue";
+    import { ref, computed, onMounted, onUnmounted } from "vue";
     import dataFactions from "../assets/armyBook.json";
 import Resume from "../components/Resume.vue";
     
@@ -10,6 +10,13 @@ import Resume from "../components/Resume.vue";
     const currentSlug = route.params.slug;
     const faction = dataFactions.factions.find(f => f.name === currentSlug);
     const items = dataFactions.items;
+    const squadName = ref('Escouade ' + faction.name)
+    const squadCost = ref(0)
+    const activePanel = ref("faction");
+    const isMobile = ref(window.innerWidth <= 500);
+    function updateIsMobile() {
+        isMobile.value = window.innerWidth <= 500;
+    }
 
     const squad = ref({
         name: 'Escouade anonyme',
@@ -68,8 +75,14 @@ import Resume from "../components/Resume.vue";
         return points;
     }
 
-    const squadName = ref('Escouade ' + faction.name)
-    const squadCost = ref(0)
+    onMounted(() => {
+        window.addEventListener('resize', updateIsMobile);
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', updateIsMobile);
+    });
+
 
 
 
@@ -80,14 +93,19 @@ import Resume from "../components/Resume.vue";
 
     <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
 
+    <div class="mobile-toggle" v-if="isMobile">
+        <button @click="activePanel = (activePanel === 'faction' ? 'roster' : 'faction')">
+            {{ activePanel === 'faction' ? '→ Escouade' : '← Faction' }}
+        </button>
+    </div>
 
     <section class="panels">
-        <div class="panels_wrapper">
+        <div class="panels_wrapper" v-show="!isMobile || activePanel === 'faction' ">
             <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
                 <ProfileSheet :profile="profile"  mode="add" @add="addProfile(profile)"/>
             </div>
         </div>
-        <div class="panels_wrapper">
+        <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
             <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
                 <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
             </div>
@@ -117,4 +135,30 @@ import Resume from "../components/Resume.vue";
             }
         }   
     }
+    @media screen and (max-width: 500px) {
+        .panels {
+            flex-direction: column;
+        }
+
+        .panels_wrapper {
+            width: 90%;
+        }
+
+        .mobile-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+
+            button {
+                padding: 0.5rem 1rem;
+                background-color: $color--mca-red;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+        }
+    }
+
 </style>

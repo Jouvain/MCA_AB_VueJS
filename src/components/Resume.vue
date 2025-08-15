@@ -39,7 +39,12 @@
         &_title {
             color: $color--mca-red;
             font-weight: bold;
-            font-size:xx-large
+            font-size:xx-large;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                font-size: large;
+                justify-content: center;
+                margin-top: $spacing;
+            }    
         }
         &_form {
             margin-top: $spacing;
@@ -53,11 +58,19 @@
             cursor: pointer;
             border-radius: 5px;
             margin-left: $spacing;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                margin-left: 0;
+            }   
         }
         &_text {
             color: $color--mca-red;
             font-weight: bold;
-            font-size:xx-large          
+            font-size:xx-large;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                font-size: large;
+                justify-content: center;
+                margin-top: 0;
+            }                      
         }
         &_display {
             display: flex;
@@ -65,6 +78,10 @@
             flex-direction: row;
             justify-content: space-around;
             width: 50%;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                flex-direction: column;
+                justify-content: center;
+            }
         }
         &_edition {
             display: flex;
