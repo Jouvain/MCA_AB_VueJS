@@ -10,7 +10,29 @@
     const printArea = ref(null);
     const route = useRoute();
     const currentSlug = route.params.slug;
-    const faction = dataFactions.factions.find(f => f.name === currentSlug);
+    // const faction = dataFactions.factions.find(f => f.name === currentSlug);
+    let faction = dataFactions.factions.find(f => f.name === currentSlug);
+
+    if(faction?.name === 'Fortune') {
+        // Fusionne tous les profils et spécialités des autres factions
+        const allOtherFactions = dataFactions.factions.filter(f => f.name !== "Fortune");
+
+        const combinedProfiles = allOtherFactions.flatMap(f => f.profiles || []);
+        const combinedSpecialties = allOtherFactions.flatMap(f => f.specialties || []);
+
+        // On crée une version étendue de Fortune sans toucher au JSON source
+        faction = {
+            ...faction,
+            profiles: combinedProfiles,
+            specialties: combinedSpecialties
+        };        
+    }
+
+    function testBtn() {
+        console.log("Bouton cliqué, ça marche");
+    }
+
+
     const items = dataFactions.items;
     const squadName = ref('Escouade ' + faction.name)
     const squadCost = ref(0)
