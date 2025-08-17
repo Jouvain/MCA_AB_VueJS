@@ -51,6 +51,21 @@ import { computed, ref, watch } from 'vue';
         isEditing.value = false;
     }
 
+    function replaceWeapon(index) {
+        const newWeapon = {
+            name: "Arme de mêlée",
+            Longueur: 0,
+            Rafale: "0",
+            Puissance: "7"
+        };
+        props.profile.weapons.splice(index, 1, newWeapon);
+    }
+
+    const isBrutal = computed(() => {
+        return props.profile.weapons.filter(w => w.Longueur === 0).length >= 2;
+    });
+
+
     const effectiveCost = computed( () => {
         let specialtyCost = 0;
         if(props.profile.specialRoles.length > 0) {
@@ -152,6 +167,7 @@ import { computed, ref, watch } from 'vue';
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
             <span v-else>{{ profile.specialRule }}</span>
             <span v-for="equipment in profile.equipment"> &nbsp {{ equipment }}</span>
+            <span v-if="isBrutal"> ! brutal ! </span>
         </section>
         <section class="ps_section ps_weapons">
             <table class="ps_table">
@@ -162,7 +178,7 @@ import { computed, ref, watch } from 'vue';
                 </thead>
                 <tbody class="ps_tbody">
                     <tr v-for="(weapon, i) in profile.weapons" :key="i">
-                        <td>{{ weapon.name }}</td>
+                        <td class="ps_weapon-line">{{ weapon.name }} <button v-if="profile.rank >= 3 && mode === 'edit' && weapon.Longueur > 0 || profile.type === 'blindé' && mode === 'edit' && weapon.Longueur > 0 " class="ps_button--small" @click="replaceWeapon(i)"> <img src="/img/bowie-knife.svg" /> </button></td>
                         <td>{{ weapon.Longueur ?? '-' }}</td>
                         <td>{{ weapon.Rafale ?? '-' }}</td>
                         <td>{{ weapon.Puissance ?? '-' }}</td>
@@ -282,12 +298,31 @@ import { computed, ref, watch } from 'vue';
             &--left {
                 margin-right: $spacing;
             }
+            &--small {
+                height: 25px;
+                width: 35px;
+                background-color: $color--mca-secondary;
+                border: 1px groove $color--mca-secondary;
+                position: relative;
+                cursor: pointer;
+            }
             img {
                 position: absolute;
                 height: 20px;
                 width: 20px;
                 top: 7px;
                 left: 7px;
+            }
+        }
+        &_weapon-line {
+            align-items: center;
+            align-content: center;
+            display: flex;
+            justify-content: space-evenly;
+            height: fit-content;
+            padding: 3px;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                flex-wrap: wrap;
             }
         }
     }

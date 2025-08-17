@@ -272,7 +272,7 @@
             <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
             <!-- <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " > -->
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
+                    <ProfileSheet :profile="profile"  mode="" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
                     <p> *** </p>
                         <!-- Spacer forcé toutes les 3 cartes -->
                         <div v-if="(i + 1) % 3 === 0" class="force-break"></div>
