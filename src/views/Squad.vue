@@ -53,6 +53,8 @@
         profiles: []
     })
 
+    
+
     const totalCost = computed(() => {
         // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
         return squad.value.profiles.reduce( (sum, p) => {
@@ -65,6 +67,7 @@
 
     function addProfile(profile) {
         profile.archive = profile.name;
+        profile.oldWeapons = [...profile.weapons];
         profile.equipment = [];
         squad.value.profiles.push({...profile});
     }
@@ -73,12 +76,10 @@
     }
     function resetProfile(profile) {
         profile.name = profile.archive;
+        profile.weapons = profile.oldWeapons;
         profile.grade = 0;
         profile.specialRoles = [];
         profile.equipment = [];
-    }
-    function modifySquadname(newName) {
-        squad.value.name = newName;
     }
 
     function getEquipmentCost() {
@@ -111,23 +112,6 @@
     onUnmounted(() => {
         window.removeEventListener('resize', updateIsMobile);
     });
-
-    // function preloadImages(element) {
-    //     const images = element.querySelectorAll("img");
-    //     const promises = [];
-
-    //     images.forEach(img => {
-    //         if (!img.complete) {
-    //             promises.push(
-    //                 new Promise(resolve => {
-    //                     img.onload = img.onerror = resolve;
-    //                 })
-    //             );
-    //         }
-    //     });
-
-    //     return Promise.all(promises);
-    // }
 
     function preloadImages(element) {
         const images = element.querySelectorAll("img");
@@ -200,39 +184,6 @@
             element.style.display = "none";
         });
     }
-
-
-    // function print () {
-    //     const element = printArea.value;
-    //     if(!element) return;
-
-    //     element.style.display = "block";
-
-    //     const opt = {
-    //         margin: 0.2,
-    //         filename: squad.value.name + '.pdf',
-    //         image: {type: 'jpeg', quality: 0.98},
-    //         html2canvas: {scale: 2},
-    //         jsPDF: {unit: 'in', format: 'letter', orientation: 'portrait'}
-    //     };
-
-    //     html2pdf().set(opt).from(element).save().then( () => {
-    //         element.style.display = "none";
-    //     });
-    // }
-
-
-    function printNative() {
-        const printable = printArea.value;
-        if (!printable) return;
-
-        printable.style.display = "block";
-
-        window.print();
-
-        printable.style.display = "none";
-    }
-
 
 </script>
 
