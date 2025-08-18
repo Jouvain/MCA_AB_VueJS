@@ -53,7 +53,16 @@
         profiles: []
     })
 
-    
+    const officerNb = computed(() => {
+        return squad.value.profiles.reduce( (sum, p) => {
+            let officers = 0;
+            if(p.grade != null && p.grade != undefined) {
+                p.grade > 0 ? officers += 1 : officers = officers;
+            }
+            
+            return sum + officers;
+        }, 0);
+    });
 
     const totalCost = computed(() => {
         // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
@@ -191,7 +200,7 @@
     
         <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
 
-        <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
+        <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" />
         <div class="print">
             <button class="print_btn" @click="print">&#x1F5A8</button>
         </div>

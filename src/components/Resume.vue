@@ -4,7 +4,8 @@
     const squadNameModel = defineModel('squadName', { type: String, default: '' })
 
     const props = defineProps({
-        squadCost: { type: Number, default: 0 }
+        squadCost: { type: Number, default: 0 },
+        squadOfficerNb: {type: Number, default: 0}
     })
     const { squadCost } = toRefs(props)
 
@@ -17,6 +18,7 @@
         <div class="resume_display">
             <h2 class="resume_title">{{ squadNameModel }}</h2>
             <p class="resume_text">Coût : {{ squadCost }}</p>
+            <p class="resume_text">Officiers : {{ squadOfficerNb }}</p>
         </div>
         <button @click="isEditing = !isEditing" class="resume_btn">Modifier le nom</button>
         <div class="resume_edition">
