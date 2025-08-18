@@ -6,6 +6,7 @@
     import dataFactions from "../assets/armyBook.json";
     import Resume from "../components/Resume.vue";
     import html2pdf from "html2pdf.js";
+import Alert from "../components/Alert.vue";
 
     const printArea = ref(null);
     const route = useRoute();
@@ -62,6 +63,21 @@
             
             return sum + officers;
         }, 0);
+    });
+
+    const costLimit = computed (() => {
+        return 25;
+    });
+    const officersLimit = computed (() => {
+        return 3;
+    });
+
+    const tooExpensive = computed (() => {
+        return totalCost.value > costLimit.value;
+    })
+
+    const tooMuchOffciers = computed( () => {
+        return officerNb.value > officersLimit.value;
     });
 
     const totalCost = computed(() => {
@@ -199,6 +215,8 @@
 <template>
     
         <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
+
+        <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" />
 
         <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" />
         <div class="print">
