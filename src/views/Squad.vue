@@ -76,7 +76,7 @@
     }
     function resetProfile(profile) {
         profile.name = profile.archive;
-        profile.weapons = profile.oldWeapons;
+        profile.weapons = [...profile.oldWeapons];
         profile.grade = 0;
         profile.specialRoles = [];
         profile.equipment = [];
