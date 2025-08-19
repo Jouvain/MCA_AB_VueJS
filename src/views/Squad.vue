@@ -90,6 +90,16 @@
         return officerNb.value > officersLimit.value;
     });
 
+    function addLightStructure(profile) {
+        if (!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
+            profile.specialRule = "";
+        }
+        let newRule = " Structure légère";
+        profile.specialRule = profile.specialRule + newRule;   
+        profile.endurance = profile.endurance - 4;
+        profile.move = profile.move + 10;     
+    }
+
     const totalCost = computed(() => {
         // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
         return squad.value.profiles.reduce( (sum, p) => {
@@ -255,7 +265,7 @@
             </div>
             <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
+                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" :items="items" />
                 </div>
             </div>
         </section>

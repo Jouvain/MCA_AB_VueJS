@@ -30,7 +30,7 @@ import { computed, ref, watch } from 'vue';
         }
     });
 
-    const emit = defineEmits(['add', 'edit', 'delete', 'reset']);
+    const emit = defineEmits(['add', 'edit', 'delete', 'reset', 'lighter']);
 
     const isEditing = ref(false);
     const localGrade = ref(props.profile.grade ?? 0);
@@ -162,7 +162,7 @@ import { computed, ref, watch } from 'vue';
             </table>
         </section>
         <section class="ps_section ps_trivia">
-            <strong>Règles : </strong>
+            <strong>Règles : <button v-if="profile.type === 'blindé' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> </strong>
             <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
             <span v-else>{{ profile.specialRule }}</span>
@@ -284,7 +284,24 @@ import { computed, ref, watch } from 'vue';
             height: 35px;
         }
         &_trivia {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: fit-content;
             margin-left: $spacing;
+            span {
+                margin-left: 3px;
+            }
+            strong {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                height: fit-content;
+                margin: 3px 0;
+                button {
+                    margin-left: 3px;
+                }
+            }
         }
         &_button {
             background-color: $color--light;
