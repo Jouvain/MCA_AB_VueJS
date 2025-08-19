@@ -178,7 +178,7 @@ import { computed, ref, watch } from 'vue';
                 </thead>
                 <tbody class="ps_tbody">
                     <tr v-for="(weapon, i) in profile.weapons" :key="i">
-                        <td class="ps_weapon-line">{{ weapon.name }} <button v-if="profile.rank >= 3 && mode === 'edit' && weapon.Longueur > 0 || profile.type === 'blindé' && mode === 'edit' && weapon.Longueur > 0 " class="ps_button--small" @click="replaceWeapon(i)"> <img src="/img/bowie-knife.svg" /> </button></td>
+                        <td class="ps_weapon-line">{{ weapon.name }} <button v-if="profile.rank >= 3 && mode === 'edit' && (weapon.Longueur > 0 || weapon.Longueur === 'souffle') || profile.type === 'blindé' && mode === 'edit' && (weapon.Longueur > 0 || weapon.Longueur === 'souffle' ) " class="ps_button--small" @click="replaceWeapon(i)"> <img src="/img/bowie-knife.svg" /> </button></td>
                         <td>{{ weapon.Longueur ?? '-' }}</td>
                         <td>{{ weapon.Rafale ?? '-' }}</td>
                         <td>{{ weapon.Puissance ?? '-' }}</td>
