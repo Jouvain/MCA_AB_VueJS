@@ -229,8 +229,8 @@
         <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" />
 
         <div class="squad_modes">
-            <div v-for="mode in modes" class="squad_mode">
-                <ButtonMode :mode="mode" class="squad_button" @mode="modifyMode" />
+            <div v-for="modeItem in modes" class="squad_mode">
+                <ButtonMode :mode="modeItem" class="squad_button" :class="{'squad_button--active' : mode === modeItem}" @mode="modifyMode" />
             </div>
         </div>
 
@@ -389,6 +389,11 @@
             padding: 10px;
             width: 100px;
             cursor: pointer;
+            &--active {
+                background-color: $color--mca-red;
+                color: $color--light;
+                font-weight: bold;
+            }
         }
     }
 
