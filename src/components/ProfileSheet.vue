@@ -162,7 +162,7 @@ import { computed, ref, watch } from 'vue';
             </table>
         </section>
         <section class="ps_section ps_trivia">
-            <strong>Règles : <button v-if="profile.type === 'blindé' && mode === 'edit' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> </strong>
+            <strong>Règles : <button v-if="profile.type === 'blindé' && mode === 'edit'  " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> </strong>
             <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
             <span v-else>{{ profile.specialRule }}</span>

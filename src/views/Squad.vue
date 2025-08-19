@@ -91,13 +91,15 @@
     });
 
     function addLightStructure(profile) {
+        let newRule = " Structure légère";
         if (!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
             profile.specialRule = "";
         }
-        let newRule = " Structure légère";
-        profile.specialRule = profile.specialRule + newRule;   
-        profile.endurance = profile.endurance - 4;
-        profile.move = profile.move + 10;     
+        if(!profile.specialRule.includes(newRule)) {
+            profile.specialRule = profile.specialRule + newRule;   
+            profile.endurance = profile.endurance - 4;
+            profile.move = profile.move + 10;  
+        }
     }
 
     const totalCost = computed(() => {
@@ -114,6 +116,9 @@
         profile.archive = profile.name;
         profile.oldWeapons = [...profile.weapons];
         profile.equipment = [];
+        profile.oldSpecialRules = profile.specialRule;
+        profile.oldEndurance = profile.endurance;
+        profile.oldMove = profile.move;
         squad.value.profiles.push({...profile});
     }
     function removeProfile(index) {
@@ -125,6 +130,9 @@
         profile.grade = 0;
         profile.specialRoles = [];
         profile.equipment = [];
+        profile.specialRule = profile.oldSpecialRules;
+        profile.endurance = profile.oldEndurance;
+        profile.move = profile.oldMove;
     }
 
     function getEquipmentCost() {
