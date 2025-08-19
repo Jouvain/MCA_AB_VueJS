@@ -1,13 +1,32 @@
 <script setup>
-    import { defineModel, defineProps, toRefs, ref } from 'vue'
+    import { defineModel, defineProps, toRefs, ref, computed } from 'vue'
 
     const squadNameModel = defineModel('squadName', { type: String, default: '' })
 
     const props = defineProps({
         squadCost: { type: Number, default: 0 },
-        squadOfficerNb: {type: Number, default: 0}
+        squadOfficerNb: {type: Number, default: 0},
+        chosenMode: {type: String}
     })
-    const { squadCost } = toRefs(props)
+    const { squadCost, squadOfficerNb, chosenMode } = toRefs(props)
+
+    const officerLimit = computed(() => {
+        if(chosenMode.value === 'Blitz') {
+            return 1;
+        } else {
+            return 3;
+        }      
+    })
+
+    const squadLimit = computed(() => {
+        if(chosenMode.value === 'Blitz') {
+            return 15;
+        } else if(chosenMode.value === 'Héroïque') {
+            return 30;
+        } else {
+            return 25;
+        }
+    })
 
     const isEditing = ref(false);
 
@@ -17,8 +36,8 @@
     <div class="resume">
         <div class="resume_display">
             <h2 class="resume_title">{{ squadNameModel }}</h2>
-            <p class="resume_text">Coût : {{ squadCost }}</p>
-            <p class="resume_text">Officiers : {{ squadOfficerNb }}</p>
+            <p class="resume_text">Coût : {{ squadCost }} / {{ squadLimit }}</p>
+            <p class="resume_text">Officiers : {{ squadOfficerNb }} / {{ officerLimit }}</p>
         </div>
         <button @click="isEditing = !isEditing" class="resume_btn">Modifier le nom</button>
         <div class="resume_edition">

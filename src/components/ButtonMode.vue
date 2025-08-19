@@ -1,11 +1,17 @@
 <script setup>
-    const props = defineOptions({
-        text: {type: String, required: true}
+    const props = defineProps({
+        mode: {type: String, required: true}
     });
+    const emit = defineEmits(['mode']);
+
+    function buttonClick() {
+        emit('mode');
+    }
+
 </script>
 
 <template>
-    <button> {{ text }} </button>
+    <button @click="emit('mode', mode)"> {{ mode }} </button>
 </template>
 
 <style scoped lang="scss">

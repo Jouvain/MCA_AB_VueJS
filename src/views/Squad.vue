@@ -6,7 +6,8 @@
     import dataFactions from "../assets/armyBook.json";
     import Resume from "../components/Resume.vue";
     import html2pdf from "html2pdf.js";
-import Alert from "../components/Alert.vue";
+    import Alert from "../components/Alert.vue";
+    import ButtonMode from "../components/ButtonMode.vue";
 
     const printArea = ref(null);
     const route = useRoute();
@@ -38,6 +39,13 @@ import Alert from "../components/Alert.vue";
         console.log("Bouton cliqué, ça marche");
     }
 
+    const mode = ref('Standard');
+
+    function modifyMode(newMode) {
+        mode.value = newMode;
+        console.log("Mode reçu : " + newMode);
+        console.log("Mode actuel : " + mode.value);
+    }
 
     const items = dataFactions.items;
     const squadName = ref('Escouade ' + faction.name)
@@ -47,6 +55,8 @@ import Alert from "../components/Alert.vue";
     function updateIsMobile() {
         isMobile.value = window.innerWidth <= 500;
     }
+
+    const modes = ['Blitz', 'Standard', 'Héroïque'];
 
     const squad = ref({
         name: 'Escouade anonyme',
@@ -218,7 +228,14 @@ import Alert from "../components/Alert.vue";
 
         <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" />
 
-        <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" />
+        <div class="squad_modes">
+            <div v-for="mode in modes" class="squad_mode">
+                <ButtonMode :mode="mode" class="squad_button" @mode="modifyMode" />
+            </div>
+        </div>
+
+        <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
+
         <div class="print">
             <button class="print_btn" @click="print">&#x1F5A8</button>
         </div>
@@ -247,7 +264,7 @@ import Alert from "../components/Alert.vue";
 
 
         <div ref="printArea" class="printable">
-            <Resume v-model:squadName="squadName" :squad-cost="totalCost" />
+            <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
             <!-- <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " > -->
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
                     <ProfileSheet :profile="profile"  mode="" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
@@ -355,7 +372,25 @@ import Alert from "../components/Alert.vue";
         page-break-before: always;
         height: 100px; /* nécessaire pour que html2canvas le prenne en compte */
         visibility: hidden;
-    }    
+    }   
+    
+    .squad {
+        &_modes {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: $spacing;
+        }
+        &_button {
+            background-color: $color--mca-tertiary;
+            color: $color--mca-red;
+            border: none;
+            border-radius: 30px;
+            padding: 10px;
+            width: 100px;
+            cursor: pointer;
+        }
+    }
 
 
 </style>
