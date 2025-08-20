@@ -1,16 +1,18 @@
 <script setup >
     const props = defineProps({
         tooExpensive: {type: Boolean},
-        tooMuchOffciers: {type: Boolean}
+        tooMuchOffciers: {type: Boolean},
+        tooMuchGrades: {type: Boolean}
     })
 </script>
 
 <template>
-    <div v-if="tooExpensive || tooMuchOffciers" class="alert">
+    <div v-if="tooExpensive || tooMuchOffciers || tooMuchGrades" class="alert">
         <p class="alert_title">ALERTE</p>
         <div class="alert_details">
             <p v-if="tooExpensive" class="alert_detail"> (trop de Points d'Armée !) </p>
             <p v-if="tooMuchOffciers" class="alert_detail"> (trop d'Officiers !) </p>
+            <p v-if="tooMuchGrades" class="alert_detail"> (L'officier est trop gradé !) </p>
         </div>
     </div>
 </template>

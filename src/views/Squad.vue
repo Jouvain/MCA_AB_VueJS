@@ -35,16 +35,10 @@
         };        
     }
 
-    function testBtn() {
-        console.log("Bouton cliqué, ça marche");
-    }
-
     const mode = ref('Standard');
 
     function modifyMode(newMode) {
         mode.value = newMode;
-        console.log("Mode reçu : " + newMode);
-        console.log("Mode actuel : " + mode.value);
     }
 
     const items = dataFactions.items;
@@ -76,10 +70,27 @@
     });
 
     const costLimit = computed (() => {
-        return 25;
+        if(mode.value === 'Blitz') {
+            return 15;
+        } else if (mode.value === 'Standard') {
+            return 25;
+        } else {
+            return 30;
+        }
     });
     const officersLimit = computed (() => {
-        return 3;
+        if(mode.value === 'Blitz') {
+            return 1;
+        } else {
+            return 3;
+        }
+    });
+    const gradeLimit = computed(() => {
+        if(mode.value === 'Blitz') {
+            return 1;
+        } else {
+            return 3;
+        }
     });
 
     const tooExpensive = computed (() => {
@@ -88,6 +99,10 @@
 
     const tooMuchOffciers = computed( () => {
         return officerNb.value > officersLimit.value;
+    });
+
+    const tooMuchGrades = computed(() => {
+        return totalGrades.value > gradeLimit.value;
     });
 
     function addLightStructure(profile) {
@@ -101,6 +116,12 @@
             profile.move = profile.move + 10;  
         }
     }
+
+    const totalGrades = computed(() => {
+        return squad.value.profiles.reduce((sum, p) => {
+            return sum + p.grade;
+        }, 0);
+    });
 
     const totalCost = computed(() => {
         // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
@@ -244,7 +265,7 @@
     
         <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
 
-        <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" />
+        <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" :too-much-grades="tooMuchGrades" />
 
         <div class="squad_modes">
             <div v-for="modeItem in modes" class="squad_mode">

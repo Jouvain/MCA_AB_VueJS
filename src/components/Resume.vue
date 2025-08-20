@@ -6,7 +6,7 @@
     const props = defineProps({
         squadCost: { type: Number, default: 0 },
         squadOfficerNb: {type: Number, default: 0},
-        chosenMode: {type: String}
+        chosenMode: {type: String},
     })
     const { squadCost, squadOfficerNb, chosenMode } = toRefs(props)
 
