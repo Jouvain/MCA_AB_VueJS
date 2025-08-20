@@ -69,6 +69,16 @@
         }, 0);
     });
 
+    const blindesNb = computed(() => {
+        return squad.value.profiles.reduce((sum, p) => {
+            let blindes = 0;
+            if(p.type === 'blindé') {
+                blindes += 1;
+            }
+            return sum + blindes;
+        }, 0);
+    });
+
     const costLimit = computed (() => {
         if(mode.value === 'Blitz') {
             return 15;
@@ -89,8 +99,19 @@
         if(mode.value === 'Blitz') {
             return 1;
         } else {
-            return 3;
+            return 100;
         }
+    });
+    const blindesLimit = computed(() => {
+        if(mode.value === 'Blitz') {
+            return 0;
+        } else {
+            return 100;
+        }
+    });
+
+    const tooMuchBlindes = computed(() => {
+        return blindesNb.value > blindesLimit.value;
     });
 
     const tooExpensive = computed (() => {
@@ -265,7 +286,7 @@
     
         <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
 
-        <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" :too-much-grades="tooMuchGrades" />
+        <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" :too-much-grades="tooMuchGrades" :too-much-blindes="tooMuchBlindes" />
 
         <div class="squad_modes">
             <div v-for="modeItem in modes" class="squad_mode">
