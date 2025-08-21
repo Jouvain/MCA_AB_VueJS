@@ -126,6 +126,16 @@
         return totalGrades.value > gradeLimit.value;
     });
 
+    function becomeHeroe(profile) {
+        let newRule = " Héroïque";
+        if (!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
+            profile.specialRule = "";
+        }
+        if(!profile.specialRule.includes(newRule)) {
+            profile.specialRule = profile.specialRule + newRule;   
+        }        
+    }
+
     function addLightStructure(profile) {
         let newRule = " Structure légère";
         if (!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
@@ -149,6 +159,9 @@
         return squad.value.profiles.reduce( (sum, p) => {
             let specialCost;
             p.specialRoles.length > 0 ? specialCost = 1 : specialCost = 0;
+            if(p.specialRule != null && p.specialRule.includes('Héroïque')) {
+                specialCost += 1;
+            }
             const gradeCost = p.grade ?? 0;
             return sum + p.cost + gradeCost + specialCost;
         }, 0) + getEquipmentCost();
@@ -315,7 +328,7 @@
             </div>
             <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" :items="items" />
+                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" @heroe="becomeHeroe(profile)" :items="items" :battle-mode="mode" />
                 </div>
             </div>
         </section>

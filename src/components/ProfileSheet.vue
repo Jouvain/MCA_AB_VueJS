@@ -27,10 +27,14 @@ import { computed, ref, watch } from 'vue';
         },
         items: {
             type: Array
+        },
+        battleMode: {
+            type: String,
+            default: 'Standard'
         }
     });
 
-    const emit = defineEmits(['add', 'edit', 'delete', 'reset', 'lighter']);
+    const emit = defineEmits(['add', 'edit', 'delete', 'reset', 'lighter', 'heroe']);
 
     const isEditing = ref(false);
     const localGrade = ref(props.profile.grade ?? 0);
@@ -70,6 +74,9 @@ import { computed, ref, watch } from 'vue';
         let specialtyCost = 0;
         if(props.profile.specialRoles.length > 0) {
             specialtyCost = 1;
+        }
+        if( props.profile.specialRule != null && props.profile.specialRule.includes('Héroïque')) {
+            specialtyCost += 1;
         }
         return props.profile.cost + (props.profile.grade ?? 0) + specialtyCost;
     });
@@ -162,7 +169,10 @@ import { computed, ref, watch } from 'vue';
             </table>
         </section>
         <section class="ps_section ps_trivia">
-            <strong>Règles : <button v-if="profile.type === 'blindé' && mode === 'edit'  " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> </strong>
+            <strong>Règles : 
+                <button v-if="profile.type === 'blindé' && mode === 'edit'  " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> 
+                <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
+            </strong>
             <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
             <span v-else>{{ profile.specialRule }}</span>
