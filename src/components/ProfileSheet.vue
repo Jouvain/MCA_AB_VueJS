@@ -69,6 +69,13 @@ import { computed, ref, watch } from 'vue';
         return props.profile.weapons.filter(w => w.Longueur === 0).length >= 2;
     });
 
+    const specialRuleList = computed(() => {
+        if(props.profile.specialRule === null) {
+            return "";
+        } else {
+            return props.profile.specialRule;
+        }
+    });
 
     const effectiveCost = computed( () => {
         let specialtyCost = 0;
@@ -170,8 +177,10 @@ import { computed, ref, watch } from 'vue';
         </section>
         <section class="ps_section ps_trivia">
             <strong>Règles : 
-                <button v-if="profile.type === 'blindé' && mode === 'edit'  " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> 
-                <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
+                <button v-if="profile.type === 'blindé' && mode === 'edit' && props.profile.specialRule === null " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> 
+                <button v-else-if="profile.type === 'blindé' && mode === 'edit' && !props.profile.specialRule.includes('Structure Légère') " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button>
+                <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule === null " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
+                <button v-else-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && !props.profile.specialRule.includes('Héroïque') " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
             </strong>
             <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
