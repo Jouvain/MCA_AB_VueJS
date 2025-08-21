@@ -181,6 +181,7 @@ import { computed, ref, watch } from 'vue';
                 <button v-else-if="profile.type === 'blindé' && mode === 'edit' && !props.profile.specialRule.includes('Structure Légère') " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button>
                 <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule === null " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
                 <button v-else-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && !props.profile.specialRule.includes('Héroïque') " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
+                <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule != null && props.profile.specialRule.includes('Héroïque') " class="ps_button--small"> <img src="/img/bowie-knife.svg" /> </button>
             </strong>
             <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
