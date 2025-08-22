@@ -136,6 +136,31 @@
         }        
     }
 
+    function becomeMeleeHeroe(profile) {
+        if(profile.meleeHeroe != null && profile.meleeHeroe === true) {
+            return;
+        }
+        if(profile.specialRule != null && profile.specialRule.includes('brutal')) {
+            return;
+        }
+        profile.meleeHeroe = true;
+        let isArmed = false;
+        profile.weapons.forEach(w => {
+            if(w.Longueur === 0) {
+                let isArmed = true;
+            }
+        });
+        if(!isArmed) {
+            profile.weapons.push({name : 'Arme de mêlée', Longueur: 0, Rafale: 0, Puissance: 7});
+        } else {
+            let newRule = " brutal";
+            if(!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
+                profile.specialRule = "";
+            }
+            profile.specialRule = profile.specialRule + newRule
+        }
+    }
+
     function addLightStructure(profile) {
         let newRule = " Structure légère";
         if (!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
@@ -162,6 +187,9 @@
             if(p.specialRule != null && p.specialRule.includes('Héroïque')) {
                 specialCost += 1;
             }
+            if(p.meleeHeroe != null && p.meleeHeroe === true) {
+                specialCost += 1;
+            }
             const gradeCost = p.grade ?? 0;
             return sum + p.cost + gradeCost + specialCost;
         }, 0) + getEquipmentCost();
@@ -174,7 +202,9 @@
         profile.oldSpecialRules = profile.specialRule;
         profile.oldEndurance = profile.endurance;
         profile.oldMove = profile.move;
-        squad.value.profiles.push({...profile});
+        // squad.value.profiles.push({...profile});
+        squad.value.profiles.push(JSON.parse(JSON.stringify(profile)));
+
     }
     function removeProfile(index) {
         squad.value.profiles.splice(index, 1);
@@ -188,6 +218,7 @@
         profile.specialRule = profile.oldSpecialRules;
         profile.endurance = profile.oldEndurance;
         profile.move = profile.oldMove;
+        profile.meleeHeroe = null;
     }
 
     function getEquipmentCost() {
@@ -328,7 +359,7 @@
             </div>
             <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" @heroe="becomeHeroe(profile)" :items="items" :battle-mode="mode" />
+                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" @heroe="becomeHeroe(profile)"  @melee="becomeMeleeHeroe(profile)" :items="items" :battle-mode="mode" />
                 </div>
             </div>
         </section>
