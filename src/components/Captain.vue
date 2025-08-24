@@ -5,7 +5,8 @@ import { ref } from 'vue';
         captain: {
             type: Object,
             required: true
-        }
+        },
+        isForPrint: {type: Boolean, default: false}
     })
 
     const doctrines = ref([
@@ -28,7 +29,7 @@ import { ref } from 'vue';
 
 <template>
     <p class="captain_title"> Capitaine : {{ captain.name }} <span v-if="captain.doctrine != null">({{ captain.doctrine }})</span></p>
-    <div class="captain_form ">       
+    <div v-if="!isForPrint" class="captain_form ">       
         <label class="captain_label">Spécialité : </label>
         <select v-model="captain.doctrine" class="captain_select">
             <option v-for="doctrine in doctrines" :key="doctrine" :value="doctrine" @click.prevent="test">{{ doctrine }}</option>

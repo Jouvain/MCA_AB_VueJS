@@ -320,6 +320,7 @@ import { computed, ref, watch } from 'vue';
             align-items: center;
             height: fit-content;
             margin-left: $spacing;
+            flex-wrap: wrap;
             @media screen and (max-width: $breakpointMax-mobile) {
                 flex-wrap: wrap;
             }
@@ -408,12 +409,22 @@ import { computed, ref, watch } from 'vue';
         box-sizing: border-box;
         display: none;
     }
+    // @media print {
+    //     .ps {
+    //         width: 100% !important;
+    //         break-inside: avoid;
+    //         page-break-inside: avoid;            
+    //     }
+    // }
     @media print {
-        .ps {
-            width: 100% !important;
-            break-inside: avoid;
-            page-break-inside: avoid;            
-        }
+    .ps {
+        width: 300px !important; // ou la largeur qui te convient
+        margin: 0 auto !important; // centrage horizontal
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-sizing: border-box;
     }
+}
+
 
 </style>

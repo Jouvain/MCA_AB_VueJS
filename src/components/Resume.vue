@@ -7,6 +7,7 @@
         squadCost: { type: Number, default: 0 },
         squadOfficerNb: {type: Number, default: 0},
         chosenMode: {type: String},
+        isForPrint: {type: Boolean, default: false}
     })
     const { squadCost, squadOfficerNb, chosenMode } = toRefs(props)
 
@@ -34,12 +35,16 @@
 
 <template>
     <div class="resume">
-        <div class="resume_display">
+        <div class="resume_display" :class="{isForPrint: isForPrint}">
             <h2 class="resume_title">{{ squadNameModel }}</h2>
-            <p class="resume_text">Coût : {{ squadCost }} / {{ squadLimit }}</p>
-            <p class="resume_text">Officiers : {{ squadOfficerNb }} / {{ officerLimit }}</p>
+            <div v-if="isForPrint" class="resume_costs">
+                <p class="resume_text">Coût : {{ squadCost }} / {{ squadLimit }}</p>
+                <p class="resume_text">Officiers : {{ squadOfficerNb }} / {{ officerLimit }}</p>                
+            </div>
+            <p v-if="!isForPrint" class="resume_text">Coût : {{ squadCost }} / {{ squadLimit }}</p>
+            <p v-if="!isForPrint" class="resume_text">Officiers : {{ squadOfficerNb }} / {{ officerLimit }}</p>
         </div>
-        <button @click="isEditing = !isEditing" class="resume_btn">Modifier le nom</button>
+        <button v-if="!isForPrint" @click="isEditing = !isEditing" class="resume_btn">Modifier le nom</button>
         <div class="resume_edition">
             <form v-if="isEditing" @submit.prevent class="resume_form">
                 <label class="resume_label">Nom de l'escouade : </label>
@@ -109,5 +114,28 @@
             flex-direction: column;
             justify-content: space-around;
         }
+        &_costs {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            gap: 20px;
+            margin-top: 0;
+        }
+        .isForPrint {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        /* Resume.vue */
+        .resume_display.isForPrint {
+            width: auto !important;          /* ou 100% */
+            display: inline-flex;            /* pour remettre coût/officiers sur une ligne */
+            gap: 20px;
+            align-items: baseline;
+            justify-content: center;         /* centrage horizontal */
+            text-align: left;
+        }
+
     }
 </style>

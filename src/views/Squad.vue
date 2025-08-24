@@ -42,6 +42,8 @@
         mode.value = newMode;
     }
 
+    const isForPrint = ref(true);
+
     const items = dataFactions.items;
     const squadName = ref('Escouade ' + faction.name)
     const squadCost = ref(0)
@@ -335,13 +337,32 @@
 
         await preloadImages(element); // 👈 attend que toutes les images soient chargées
 
+        // const opt = {
+        //     margin: 0.2,
+        //     filename: squad.value.name + '.pdf',
+        //     image: { type: 'jpeg', quality: 0.98 },
+        //     html2canvas: { scale: 2 },
+        //     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        // };
         const opt = {
-            margin: 0.2,
+            margin: 0.5,
             filename: squad.value.name + '.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            html2canvas: {
+                scale: 2,
+                logging: true,
+                useCORS: true,
+                allowTaint: true,
+                letterRendering: true, // améliore le rendu du texte
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'letter',
+                orientation: 'portrait'
+            },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } 
         };
+
 
         html2pdf().set(opt).from(element).save().then(() => {
             element.style.display = "none";
@@ -392,17 +413,38 @@
 
 
 
+        <!-- <div ref="printArea" class="printable">
+            <div class="printable-container">
+                <Resume class="printable-container_resume" v-model:squadName="squadName" :is-for-print="isForPrint" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
+                    <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
+                        <ProfileSheet :profile="profile"  mode="" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
+                        <div class="print-only">
+                            <p> *** </p>
+                            <div v-if="(i + 1) % 3 === 0" class="force-break"></div>
+                        </div>
+                    </div> 
+            </div>
+        </div> -->
+
         <div ref="printArea" class="printable">
-            <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
-            <!-- <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " > -->
-                <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                    <ProfileSheet :profile="profile"  mode="" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
-                    <p> *** </p>
-                        <!-- Spacer forcé toutes les 3 cartes -->
-                        <div v-if="(i + 1) % 3 === 0" class="force-break"></div>
-                </div>
-            <!-- </div> -->
+        <div class="printable-container">
+            <Resume 
+                class="print-header"                       
+                v-model:squadName="squadName"
+                :is-for-print="isForPrint"
+                :squad-cost="totalCost"
+                :squad-officer-nb="officerNb"
+                :chosen-mode="mode"
+            />
+            <Captain v-if="captain != null" :captain="captain" :is-for-print="isForPrint" />
+            <div class="print-separator"></div>         <!-- 👈 -->
+
+            <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
+            <ProfileSheet :profile="profile" mode="" :roles="faction.specialties" :items="items" />
+            </div>
         </div>
+        </div>
+
     
 
 
@@ -490,18 +532,129 @@
 
     }
 
-    .printable {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        display: none;
+    // .printable {
+    //     width: 100%;
+    //     max-width: 100%;
+    //     box-sizing: border-box;
+    //     display: none;
+    // }
+    // .printable-container {
+    //     display: flex;
+    //     flex-direction: column;
+    //     align-items: center;
+    //     width: 100%;
+    //     padding: 20px;
+    //     box-sizing: border-box;
+    //     &_resume {
+    //         display: flex;
+    //         flex-direction: column;
+    //         align-items: center;
+    //         text-align: center;
+    //     }
+    // }
+
+
+
+
+    // .printable-container {
+    //     display: block;
+    // }
+    // .gallery_block {
+    //     width: 100%;
+    //     display: flex;
+    //     justify-content: center;
+    //     margin-bottom: 20px;
+    // }
+    
+    // .print-only {
+    //     display: block;
+    //     text-align: center;
+    //     margin: 10px 0;
+    // }
+    // .force-break {
+    //     // height: 100px; /* Réduit la hauteur pour éviter l'espace blanc */
+    //     // page-break-before: always;
+    // }
+
+
+
+    // .force-break {
+    //     display: block;
+    //     page-break-before: always;
+    //     height: 100px; /* nécessaire pour que html2canvas le prenne en compte */
+    //     visibility: hidden;
+    // }   
+
+    /* Zone impression simple: pas de flex ici */
+    .printable { display: none; }
+    .printable-container {
+    display: block !important;
+    max-width: 800px;         /* largeur de colonne imprimée */
+    width: 100%;
+    margin: 0 auto;           /* 👈 centre horizontalement toute la colonne */
+    padding: 20px;
+    box-sizing: border-box;
     }
-    .force-break {
-        display: block;
-        page-break-before: always;
-        height: 100px; /* nécessaire pour que html2canvas le prenne en compte */
-        visibility: hidden;
-    }   
+
+
+    /* Le header ne doit JAMAIS être coupé ni “compressé” */
+    .print-header {              /* le composant Resume dans la zone print */
+    display: block !important;
+    text-align: center;        /* centrage du titre */
+    margin: 0 0 16px 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    }
+
+    /* Mise en ligne compacte uniquement pour l’impression */
+    .print-header .resume_display {
+    display: inline-flex;      /* 👈 petit flex localisé = ok pour html2pdf */
+    gap: 20px;
+    align-items: baseline;
+    justify-content: center;
+    width: auto;
+    text-align: left;          /* le texte à l’intérieur du flex */
+    }
+
+    .print-header .resume_costs {
+    display: inline-flex;      /* “Coût” et “Officiers” sur la même ligne */
+    gap: 20px;
+    margin-top: 0;
+    }
+
+
+    /* Petit séparateur visible pour html2canvas (évite les collages) */
+    .print-separator { height: 12px; }
+
+    /* Chaque carte ne doit pas se casser ni remonter sous un élément précédent */
+    .gallery_block {
+    display: block;
+    margin: 0 0 20px 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    }
+
+    /* centre le contenu quel que soit le markup interne du ProfileSheet */
+    .gallery_block > * {
+    display: inline-block;     /* pour que text-align centre l’élément */
+    margin: 0 auto !important; /* sécurité si l’élément a une largeur fixe */
+    }
+    .printable-container { text-align: center; } /* centre les inline-block */
+
+
+    /* Classe html2pdf pour forcer un saut si besoin
+    (tu peux l'insérer entre éléments quand tu le souhaites) */
+    .html2pdf__page-break {
+    height: 0;
+    break-before: page;
+    page-break-before: always;
+    }
+
+    @media print {
+    .mobile-toggle, .panels_wrapper:first-child, .print { display: none !important; }
+    }
+
+
     
     .squad {
         &_modes {
