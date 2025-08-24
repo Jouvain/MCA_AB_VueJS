@@ -152,7 +152,7 @@
         let isArmed = false;
         profile.weapons.forEach(w => {
             if(w.Longueur === 0) {
-                let isArmed = true;
+                isArmed = true;
             }
         });
         if(!isArmed) {
