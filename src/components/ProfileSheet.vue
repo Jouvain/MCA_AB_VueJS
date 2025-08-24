@@ -31,10 +31,14 @@ import { computed, ref, watch } from 'vue';
         battleMode: {
             type: String,
             default: 'Standard'
+        },
+        captainNb: {
+            type: Number,
+            default: 0
         }
     });
 
-    const emit = defineEmits(['add', 'edit', 'delete', 'reset', 'lighter', 'heroe', 'melee']);
+    const emit = defineEmits(['add', 'edit', 'delete', 'reset', 'lighter', 'heroe', 'melee', 'captain']);
 
     const isEditing = ref(false);
     const localGrade = ref(props.profile.grade ?? 0);
@@ -103,6 +107,8 @@ import { computed, ref, watch } from 'vue';
             </div>
             <h3 class="ps_title">{{ profile.name }}</h3>
             <div class="ps_headband">
+                <img v-if="profile.specialRule != null && profile.specialRule.includes('Héroïque') && profile.isCaptain != true " src="/img/laurels_White.svg" class="ps_rank" />
+                <img v-if="profile.isCaptain != null && profile.isCaptain === true" src="/img/laurel-crown_White.svg" class="ps_rank"/>
                 <button v-if="mode === 'edit' " @click="isEditing = !isEditing" class="ps_button ps_button--left">
                     <img src="/img/pencil.svg" />
                 </button>
@@ -185,6 +191,7 @@ import { computed, ref, watch } from 'vue';
                 <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule === null " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
                 <button v-else-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && !props.profile.specialRule.includes('Héroïque') " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
                 <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule != null && props.profile.specialRule.includes('Héroïque') && props.profile.meleeHeroe != true " class="ps_button--small" @click="emit('melee')" > <img src="/img/bowie-knife.svg" /> </button>
+                <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule != null && props.profile.specialRule.includes('Héroïque') && captainNb < 1 " class="ps_button--small" @click="emit('captain')" > <img src="/img/laurel-crown.svg" /> </button>
             </strong>
             <span v-if="profile.specialRoles.length > 0 && profile.specialRule !== null" >{{ profile.specialRule }} , {{ profile.specialRoles }}</span>
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>

@@ -8,6 +8,7 @@
     import html2pdf from "html2pdf.js";
     import Alert from "../components/Alert.vue";
     import ButtonMode from "../components/ButtonMode.vue";
+    import Captain from "../components/Captain.vue";
 
     const printArea = ref(null);
     const route = useRoute();
@@ -136,6 +137,10 @@
         }        
     }
 
+    function becomeCaptain(profile) {
+        profile.isCaptain = true;
+    }
+
     function becomeMeleeHeroe(profile) {
         if(profile.meleeHeroe != null && profile.meleeHeroe === true) {
             return;
@@ -179,6 +184,26 @@
         }, 0);
     });
 
+    const captain = computed(() => {
+        let foundCaptain = squad.value.profiles.find(p => p.isCaptain === true);
+        function addProperty(object, property) {
+            return Object.assign(object, { [property]: null });
+        }
+        // let foundCaptain = addProperty(squad.value.profiles.find(p => p.isCaptain === true), doctrine)
+        return foundCaptain;
+    });
+
+
+    const captainNb = computed(() => {
+        let captains = 0;
+        return squad.value.profiles.reduce((sum, p) => {
+            if(p.isCaptain != null && p.isCaptain === true) {
+                captains += 1;
+            }
+            return sum + captains;
+        }, 0);
+    });
+
     const totalCost = computed(() => {
         // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
         return squad.value.profiles.reduce( (sum, p) => {
@@ -202,7 +227,6 @@
         profile.oldSpecialRules = profile.specialRule;
         profile.oldEndurance = profile.endurance;
         profile.oldMove = profile.move;
-        // squad.value.profiles.push({...profile});
         squad.value.profiles.push(JSON.parse(JSON.stringify(profile)));
 
     }
@@ -339,6 +363,7 @@
         </div>
 
         <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
+        <Captain v-if="captain != null" :captain="captain" />
 
         <div class="print">
             <button class="print_btn" @click="print">&#x1F5A8</button>
@@ -359,7 +384,7 @@
             </div>
             <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                    <ProfileSheet :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" @heroe="becomeHeroe(profile)"  @melee="becomeMeleeHeroe(profile)" :items="items" :battle-mode="mode" />
+                    <ProfileSheet :captain-nb="captainNb" :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" @heroe="becomeHeroe(profile)"  @melee="becomeMeleeHeroe(profile)" @captain="becomeCaptain(profile)" :items="items" :battle-mode="mode" />
                 </div>
             </div>
         </section>
