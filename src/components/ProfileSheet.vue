@@ -276,6 +276,7 @@ import { computed, ref, watch } from 'vue';
             align-items: flex-start;
             width: 100%;
             padding: $spacing 0 $spacing $spacing;
+            gap: 10px;
         }
         &_form {
             label {
@@ -319,8 +320,15 @@ import { computed, ref, watch } from 'vue';
             align-items: center;
             height: fit-content;
             margin-left: $spacing;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                flex-wrap: wrap;
+            }
             span {
                 margin-left: 3px;
+                @media screen and (max-width: $breakpointMax-mobile) {
+                    margin-left: 0;
+                    margin-bottom: 3px;
+                }
             }
             strong {
                 display: flex;
@@ -344,6 +352,9 @@ import { computed, ref, watch } from 'vue';
             margin-left: $spacing;
             &--left {
                 margin-right: $spacing;
+                @media  screen and (max-width: $breakpointMax-mobile) {
+                    margin-right: 10px;
+                }
             }
             &--small {
                 height: 25px;
@@ -379,6 +390,10 @@ import { computed, ref, watch } from 'vue';
         flex-wrap: wrap;
         gap: 10px;
         max-width: 100%;
+        @media screen and (max-width: $breakpointMax-mobile) {
+            margin-top: 10px;
+            max-width: 60%;
+        }
     }   
 
     .checkbox-item {
