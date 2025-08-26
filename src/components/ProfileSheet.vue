@@ -196,7 +196,7 @@ import { computed, toRefs, ref, watch } from 'vue';
         <section class="ps_section ps_trivia">
             <strong>Règles : 
                 <button v-if="profile.type === 'blindé' && mode === 'edit' && props.profile.specialRule === null && faction != 'Faim' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> 
-                <button v-else-if="profile.type === 'blindé' && mode === 'edit' && !props.profile.specialRule.includes('Structure Légère') && faction != 'Faim' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button>
+                <button v-else-if="profile.type === 'blindé' && mode === 'edit' && !props.profile.specialRule.includes('Structure légère') && faction != 'Faim' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button>
                 <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule === null " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
                 <button v-else-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && !props.profile.specialRule.includes('Héroïque') " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
                 <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule != null && props.profile.specialRule.includes('Héroïque') && props.profile.meleeHeroe != true " class="ps_button--small" @click="emit('melee')" > <img src="/img/bowie-knife.svg" /> </button>

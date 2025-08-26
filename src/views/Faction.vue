@@ -24,8 +24,10 @@
         faction = {
             ...faction,
             profiles: combinedProfiles,
-            specialties: combinedSpecialties
-        };        
+            specialties: faction.specialties
+        };    
+        
+
     }
 
     function testBtn() {
