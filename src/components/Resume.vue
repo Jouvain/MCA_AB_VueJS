@@ -7,12 +7,13 @@
         squadCost: { type: Number, default: 0 },
         squadOfficerNb: {type: Number, default: 0},
         chosenMode: {type: String},
-        isForPrint: {type: Boolean, default: false}
+        isForPrint: {type: Boolean, default: false},
+        faction: {type: String, default: ""}
     })
-    const { squadCost, squadOfficerNb, chosenMode } = toRefs(props)
+    const { squadCost, squadOfficerNb, chosenMode, faction } = toRefs(props)
 
     const officerLimit = computed(() => {
-        if(chosenMode.value === 'Blitz') {
+        if(chosenMode.value === 'Blitz' || faction.value === "Domination") {
             return 1;
         } else {
             return 3;

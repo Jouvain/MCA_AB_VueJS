@@ -92,7 +92,7 @@
         }
     });
     const officersLimit = computed (() => {
-        if(mode.value === 'Blitz') {
+        if(mode.value === 'Blitz' || faction.name === 'Domination') {
             return 1;
         } else {
             return 3;
@@ -229,7 +229,7 @@
         profile.oldSpecialRules = profile.specialRule;
         profile.oldEndurance = profile.endurance;
         profile.oldMove = profile.move;
-        if(faction.name === 'Putrescence') {
+        if(faction.name === 'Putrescence' && profile.type === 'blindé') {
             profile.grade = profile.rank;
         }
         squad.value.profiles.push(JSON.parse(JSON.stringify(profile)));
@@ -385,7 +385,7 @@
             </div>
         </div>
 
-        <Resume v-model:squadName="squadName" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
+        <Resume v-model:squadName="squadName" :faction="faction.name" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
         <Captain v-if="captain != null" :captain="captain" />
 
         <div class="print">
@@ -433,6 +433,7 @@
             <Resume 
                 class="print-header"                       
                 v-model:squadName="squadName"
+                :faction="faction.name"
                 :is-for-print="isForPrint"
                 :squad-cost="totalCost"
                 :squad-officer-nb="officerNb"
