@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, toRefs, ref, watch } from 'vue';
 
     const props = defineProps({
         profile: {
@@ -85,6 +85,8 @@ import { computed, ref, watch } from 'vue';
         }
     });
 
+    const { faction } = toRefs(props)
+
     const effectiveCost = computed( () => {
         let specialtyCost = 0;
         if(props.profile.specialRoles.length > 0) {
@@ -94,6 +96,9 @@ import { computed, ref, watch } from 'vue';
             specialtyCost += 1;
         }
         if(props.profile.meleeHeroe != null && props.profile.meleeHeroe === true) {
+            specialtyCost += 1;
+        }
+        if(faction.value === 'Fortune' && props.profile.name != null && props.profile.name.includes("avec")) {
             specialtyCost += 1;
         }
         return props.profile.cost + (props.profile.grade ?? 0) + specialtyCost;

@@ -217,6 +217,9 @@
             if(p.meleeHeroe != null && p.meleeHeroe === true) {
                 specialCost += 1;
             }
+            if(faction.name === 'Fortune' && p.name.includes("avec")) {
+                specialCost += 1;
+            }
             const gradeCost = p.grade ?? 0;
             return sum + p.cost + gradeCost + specialCost;
         }, 0) + getEquipmentCost();
