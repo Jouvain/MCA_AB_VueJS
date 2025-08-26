@@ -210,6 +210,7 @@ import { computed, toRefs, ref, watch } from 'vue';
             <span v-if="faction === 'Science' && profile.type === 'infanterie' "> - Optiques  </span>
             <span v-if="faction === 'Science' && profile.grade != null && profile.grade >= 1"> - Hacker  </span>
             <span v-if="faction === 'Faim' && profile.type === 'blindé' "> - Titan </span>
+            <span v-if="faction === 'Domination' && profile.type === 'infanterie' " > - Éternel </span> 
             <span v-if="faction === 'Domination' && profile.grade != null && profile.grade >= 1"> - Neuromech </span>
         </section>
         <section class="ps_section ps_weapons">
