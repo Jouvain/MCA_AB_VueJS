@@ -229,8 +229,10 @@
         profile.oldSpecialRules = profile.specialRule;
         profile.oldEndurance = profile.endurance;
         profile.oldMove = profile.move;
+        if(faction.name === 'Putrescence') {
+            profile.grade = profile.rank;
+        }
         squad.value.profiles.push(JSON.parse(JSON.stringify(profile)));
-
     }
     function removeProfile(index) {
         squad.value.profiles.splice(index, 1);
