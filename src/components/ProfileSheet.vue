@@ -201,8 +201,9 @@ import { computed, ref, watch } from 'vue';
             <span v-else-if="profile.specialRoles.length > 0 ">{{ profile.specialRoles }}</span>
             <span v-else>{{ profile.specialRule }}</span>
             <span v-for="equipment in profile.equipment"> &nbsp {{ equipment }}</span>
-            <span v-if="isBrutal"> ! brutal ! </span>
-            <span v-if="faction === 'Science' && profile.grade != null && profile.grade >= 1"> ! Hacker ! </span>
+            <span v-if="isBrutal">  brutal  </span>
+            <span v-if="faction === 'Science' && profile.type === 'infanterie' "> - Optiques  </span>
+            <span v-if="faction === 'Science' && profile.grade != null && profile.grade >= 1"> - Hacker  </span>
         </section>
         <section class="ps_section ps_weapons">
             <table class="ps_table">
