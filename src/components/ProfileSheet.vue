@@ -35,6 +35,10 @@ import { computed, ref, watch } from 'vue';
         captainNb: {
             type: Number,
             default: 0
+        },
+        faction: {
+            type: String,
+            default: ""
         }
     });
 
@@ -198,6 +202,7 @@ import { computed, ref, watch } from 'vue';
             <span v-else>{{ profile.specialRule }}</span>
             <span v-for="equipment in profile.equipment"> &nbsp {{ equipment }}</span>
             <span v-if="isBrutal"> ! brutal ! </span>
+            <span v-if="faction === 'Science' && profile.grade != null && profile.grade >= 1"> ! Hacker ! </span>
         </section>
         <section class="ps_section ps_weapons">
             <table class="ps_table">

@@ -405,7 +405,7 @@
             </div>
             <div class="panels_wrapper" v-show="!isMobile || activePanel === 'roster' " >
                 <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                    <ProfileSheet :captain-nb="captainNb" :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" @heroe="becomeHeroe(profile)"  @melee="becomeMeleeHeroe(profile)" @captain="becomeCaptain(profile)" :items="items" :battle-mode="mode" />
+                    <ProfileSheet :faction="faction.name" :captain-nb="captainNb" :profile="profile"  mode="edit" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" @lighter="addLightStructure(profile)" @heroe="becomeHeroe(profile)"  @melee="becomeMeleeHeroe(profile)" @captain="becomeCaptain(profile)" :items="items" :battle-mode="mode" />
                 </div>
             </div>
         </section>
@@ -440,7 +440,7 @@
             <div class="print-separator"></div>         <!-- 👈 -->
 
             <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-            <ProfileSheet :profile="profile" mode="" :roles="faction.specialties" :items="items" />
+            <ProfileSheet :profile="profile" mode="" :roles="faction.specialties" :items="items" :faction="faction.name" />
             </div>
         </div>
         </div>
