@@ -17,8 +17,18 @@
         // Fusionne tous les profils et spécialités des autres factions
         const allOtherFactions = dataFactions.factions.filter(f => f.name !== "Fortune");
 
-        const combinedProfiles = allOtherFactions.flatMap(f => f.profiles || []);
-        const combinedSpecialties = allOtherFactions.flatMap(f => f.specialties || []);
+       
+
+        // On crée des clones des profils, en ajoutant originalFaction
+        const combinedProfiles = allOtherFactions.flatMap(f =>
+            (f.profiles || []).map(p => ({
+                ...p, // clone
+                originalFaction: f.name // ajout du champ
+            }))
+        );
+
+        // const combinedProfiles = allOtherFactions.flatMap(f => f.profiles || []);
+        // const combinedSpecialties = allOtherFactions.flatMap(f => f.specialties || []);
 
         // On crée une version étendue de Fortune sans toucher au JSON source
         faction = {

@@ -20,7 +20,14 @@
         // Fusionne tous les profils et spécialités des autres factions
         const allOtherFactions = dataFactions.factions.filter(f => f.name !== "Fortune");
 
-        const combinedProfiles = allOtherFactions.flatMap(f => f.profiles || []);
+        const combinedProfiles = allOtherFactions.flatMap(f =>
+            (f.profiles || []).map(p => ({
+                ...p, // clone
+                originalFaction: f.name // ajout du champ
+            }))
+        );
+
+        // const combinedProfiles = allOtherFactions.flatMap(f => f.profiles || []);
         // const combinedSpecialties = allOtherFactions.flatMap(f => f.specialties || []);
         const combinedSpecialties = Array.from(
             new Set(
@@ -243,17 +250,49 @@
         profile.archive = profile.name;
         profile.oldWeapons = [...profile.weapons];
         profile.equipment = [];
-        profile.oldSpecialRules = profile.specialRule;
+        if(profile.specialRule != null) {
+            profile.oldSpecialRules = [...profile.specialRule];
+        }
         profile.oldEndurance = profile.endurance;
         profile.oldMove = profile.move;
-        if(faction.name === 'Putrescence' && profile.type === 'blindé') {
-            profile.grade = profile.rank;
-        }
+
         squad.value.profiles.push(JSON.parse(JSON.stringify(profile)));
+        
         if(faction.name === 'Égalité' && profile.name.includes('Igualdad Soldado') && oneShot === false) {
             addProfile(profile, true);
         }
+        if(profile.specialRule != null && profile.specialRule.includes("Poste mobile")) {
+            const lastProfile = squad.value.profiles[squad.value.profiles.length - 1];
+            lastProfile.grade = lastProfile.rank;
+        }
+        
     }
+
+//     function addProfile(profile, oneShot = false) {
+//     // clone profond d’entrée
+//     let clone = JSON.parse(JSON.stringify(profile));
+
+//     clone.archive = clone.name;
+//     clone.oldWeapons = [...clone.weapons];
+//     clone.equipment = [];
+//     clone.oldSpecialRules = [...clone.specialRule];
+//     clone.oldEndurance = clone.endurance;
+//     clone.oldMove = clone.move;
+
+//     if (faction.name === 'Fortune' && !clone.specialRule.includes("Clandestinité")) {
+//         clone.specialRule = clone.specialRule + " Clandestinité";
+//     }
+//     if (faction.name === 'Putrescence' && clone.type === 'blindé') {
+//         clone.grade = clone.rank;
+//     }
+
+//     squad.value.profiles.push(clone);
+
+//     if (faction.name === 'Égalité' && clone.name.includes('Igualdad Soldado') && oneShot === false) {
+//         addProfile(clone, true);
+//     }
+// }
+
     function removeProfile(index) {
         squad.value.profiles.splice(index, 1);
     }
@@ -268,6 +307,19 @@
         profile.move = profile.oldMove;
         profile.meleeHeroe = null;
     }
+
+//     function resetProfile(profile) {
+//     profile.name = profile.archive;
+//     profile.weapons = [...profile.oldWeapons];
+//     profile.grade = 0;
+//     profile.specialRoles = [];
+//     profile.equipment = [];
+//     profile.specialRule = [...profile.oldSpecialRules]; // ← clone pour éviter référence
+//     profile.endurance = profile.oldEndurance;
+//     profile.move = profile.oldMove;
+//     profile.meleeHeroe = null;
+// }
+
 
     function getEquipmentCost() {
         let points = 0;

@@ -38,7 +38,7 @@
         {
           "name": "U.R.C Aeternitas",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Éternel",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -65,7 +65,7 @@
         {
           "name": "U.R.C Aeternitas avec déphaseur",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Éternel",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -92,7 +92,7 @@
         {
           "name": "U.R.C Aeternitas avec lance-flammes",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Éternel",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -119,7 +119,7 @@
         {
           "name": "U.R.C Aeternitas avec carabine laser",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Éternel",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -146,7 +146,7 @@
         {
           "name": "U.R.C Discorde",
           "type": "infanterie",
-          "specialRule": "Brutal",
+          "specialRule": "Brutal, Éternel",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -167,7 +167,7 @@
         {
           "name": "U.R.C Proserpine",
           "type": "infanterie",
-          "specialRule": "Furtif, Grav-Suspenseur",
+          "specialRule": "Furtif, Grav-Suspenseur, Éternel",
           "rank": 2,
           "move": 25,
           "endurance": 6,
@@ -188,7 +188,7 @@
         {
           "name": "U.R.C Pluton",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Éternel",
           "rank": 3,
           "move": 20,
           "endurance": 10,
@@ -209,7 +209,7 @@
         {
           "name": "U.R.C Diane",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Éternel",
           "rank": 3,
           "move": 20,
           "endurance": 10,
@@ -262,7 +262,7 @@
       "description": "Aucune force armée ne peut se targuer de rivaliser avec les armées de la sacro-sainte Science en ce qui concerne le matériel et l'équipement. Pourvus des meilleures innovations issues de ses laboratoires de recherche, les Clones sont le prolongement vivant de leurs armes.",
       "specialRule": [
         {
-          "name": "Optique de visée assistée",
+          "name": "Optiques de visée assistée",
           "rule": "Tous les combattants d'infanterie de la faction sont équipés d'optiques de visée assistée, ce qui leur permet de lancer 2 dés supplémentaires pour tous leurs jets de résolution d'un Tir."
         },
         {
@@ -280,7 +280,7 @@
         {
           "name": "Clone de ligne Pugnator",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Optiques",
           "rank": 1,
           "move": 20,
           "endurance": 5,
@@ -307,7 +307,7 @@
         {
           "name": "Clone de ligne Pugnator avec mitrailleuse",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Optiques",
           "rank": 1,
           "move": 20,
           "endurance": 5,
@@ -334,7 +334,7 @@
         {
           "name": "Clone de combat Ferrum",
           "type": "infanterie",
-          "specialRule": "furtif",
+          "specialRule": "Furtif, Optiques",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -355,7 +355,7 @@
         {
           "name": "Clone de soutien Continger",
           "type": "infanterie",
-          "specialRule": "pistolero",
+          "specialRule": "Pistolero, Optiques",
           "rank": 2,
           "move": 20,
           "endurance": 8,
@@ -382,7 +382,7 @@
         {
           "name": "Clone de soutien Responsum",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Optiques",
           "rank": 2,
           "move": 20,
           "endurance": 8,
@@ -403,7 +403,7 @@
         {
           "name": "Clone d'élite Venandus",
           "type": "infanterie",
-          "specialRule": "grav-suspenseur",
+          "specialRule": "Grav-suspenseur, Optiques",
           "rank": 3,
           "move": 20,
           "endurance": 10,
@@ -424,7 +424,7 @@
         {
           "name": "Clone d'élite Sagittari",
           "type": "infanterie",
-          "specialRule": "grav-suspenseur",
+          "specialRule": "Grav-suspenseur, Optiques",
           "rank": 3,
           "move": 20,
           "endurance": 11,
@@ -445,7 +445,7 @@
         {
           "name": "Clone d'élite Gladius",
           "type": "infanterie",
-          "specialRule": "pistolero, grav-suspenseur",
+          "specialRule": "Pistolero, Grav-suspenseur, Optiques",
           "rank": 3,
           "move": 20,
           "endurance": 11,
@@ -478,7 +478,7 @@
         {
           "name": "Clone d'élite Bellator",
           "type": "infanterie",
-          "specialRule": "pistolero, grav-suspenseur",
+          "specialRule": "Pistolero, Grav-suspenseur, Optiques",
           "rank": 3,
           "move": 20,
           "endurance": 11,
@@ -737,7 +737,7 @@
         {
           "name": "Appui-feu de classe Manticore",
           "type": "blindé",
-          "specialRule": null,
+          "specialRule": "Poste mobile",
           "rank": 1,
           "move": 20,
           "endurance": 11,
@@ -758,7 +758,7 @@
         {
           "name": "Appui-feu de classe Wyvern",
           "type": "blindé",
-          "specialRule": null,
+          "specialRule": "Poste mobile",
           "rank": 2,
           "move": 20,
           "endurance": 13,
@@ -1208,7 +1208,7 @@
         {
           "name": "Star Eagle trooper",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 1,
           "move": 20,
           "endurance": 5,
@@ -1235,7 +1235,7 @@
         {
           "name": "Star Eagle trooper avec mitrailleuse",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 1,
           "move": 20,
           "endurance": 5,
@@ -1262,7 +1262,7 @@
         {
           "name": "Star Eagle trooper avec fusil tesla",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 1,
           "move": 20,
           "endurance": 5,
@@ -1289,7 +1289,7 @@
         {
           "name": "Steel Falcon veteran",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -1316,7 +1316,7 @@
         {
           "name": "Steel Falcon veteran avec mitrailleuse",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -1343,7 +1343,7 @@
         {
           "name": "Steel Falcon veteran avec canon laser",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -1370,7 +1370,7 @@
         {
           "name": "Steel Falcon veteran avec lance-missiles",
           "type": "infanterie",
-          "specialRule": "guidage laser (lance-missiles)",
+          "specialRule": "Guidage laser (lance-missiles), Professionnels",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -1397,7 +1397,7 @@
         {
           "name": "Shock Vulture Assault",
           "type": "infanterie",
-          "specialRule": "grav-suspenseur",
+          "specialRule": "Grav-suspenseur, Professionnels",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -1424,7 +1424,7 @@
         {
           "name": "Shock Vulture Assault avec lance-flamme",
           "type": "infanterie",
-          "specialRule": "grav-suspenseur",
+          "specialRule": "Grav-suspenseur, Professionnels",
           "rank": 2,
           "move": 20,
           "endurance": 7,
@@ -1451,7 +1451,7 @@
         {
           "name": "Steel Thunder Armored Unit",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 3,
           "move": 20,
           "endurance": 10,
@@ -1472,7 +1472,7 @@
         {
           "name": "Shock Tempest Armored Unit",
           "type": "infanterie",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 3,
           "move": 20,
           "endurance": 10,
@@ -1499,7 +1499,7 @@
         {
           "name": "Thunerstrike L.B.E",
           "type": "blindé",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 1,
           "move": 20,
           "endurance": 11,
@@ -1520,7 +1520,7 @@
         {
           "name": "Iron Rain L.B.E",
           "type": "blindé",
-          "specialRule": null,
+          "specialRule": "Professionnels",
           "rank": 1,
           "move": 20,
           "endurance": 11,
@@ -1547,7 +1547,7 @@
         {
           "name": "Deathblow H.B.E",
           "type": "blindé",
-          "specialRule": "guidage laser (lance-missiles)",
+          "specialRule": "Guidage laser (lance-missiles), Professionnels",
           "rank": 2,
           "move": 20,
           "endurance": 13,
@@ -2088,7 +2088,7 @@
         {
           "name": "Corrosophora 'Cracheur'",
           "type": "blindé",
-          "specialRule": "Corrosif (Bile)",
+          "specialRule": "Corrosif (Bile), Titan",
           "rank": 1,
           "move": 20,
           "endurance": 9,
@@ -2115,7 +2115,7 @@
         {
           "name": "Insolidiphora 'Equarisseur'",
           "type": "blindé",
-          "specialRule": "Corrosif (Acide)",
+          "specialRule": "Corrosif (Acide), Titan",
           "rank": 2,
           "move": 20,
           "endurance": 11,

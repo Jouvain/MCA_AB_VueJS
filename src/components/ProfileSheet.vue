@@ -195,8 +195,8 @@ import { computed, toRefs, ref, watch } from 'vue';
         </section>
         <section class="ps_section ps_trivia">
             <strong>Règles : 
-                <button v-if="profile.type === 'blindé' && mode === 'edit' && props.profile.specialRule === null && faction != 'Faim' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> 
-                <button v-else-if="profile.type === 'blindé' && mode === 'edit' && !props.profile.specialRule.includes('Structure légère') && faction != 'Faim' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button>
+                <button v-if="profile.type === 'blindé' && mode === 'edit' && props.profile.specialRule === null || profile.type === 'blindé' && mode === 'edit' && props.profile.specialRule != null && !props.profile.specialRule.includes('Titan') && !props.profile.specialRule.includes('Structure légère')  " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> 
+                <!-- <button v-else-if="profile.type === 'blindé' && mode === 'edit' && !props.profile.specialRule.includes('Structure légère') && faction != 'Faim' " class="ps_button--small" @click="emit('lighter')" > <img src="/img/jeep.svg" /> </button> -->
                 <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule === null " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
                 <button v-else-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && !props.profile.specialRule.includes('Héroïque') " class="ps_button--small" @click="emit('heroe')" > <img src="/img/laurels.svg" /> </button>
                 <button v-if="profile.type === 'infanterie' && mode === 'edit' && battleMode === 'Héroïque' && props.profile.specialRule != null && props.profile.specialRule.includes('Héroïque') && props.profile.meleeHeroe != true " class="ps_button--small" @click="emit('melee')" > <img src="/img/bowie-knife.svg" /> </button>
@@ -207,11 +207,14 @@ import { computed, toRefs, ref, watch } from 'vue';
             <span v-else>{{ profile.specialRule }}</span>
             <span v-for="equipment in profile.equipment"> &nbsp {{ equipment }}</span>
             <span v-if="isBrutal"> - Brutal  </span>
-            <span v-if="faction === 'Science' && profile.type === 'infanterie' "> - Optiques  </span>
+            <!-- <span v-if="faction === 'Science' && profile.type === 'infanterie' "> - Optiques  </span> -->
             <span v-if="faction === 'Science' && profile.grade != null && profile.grade >= 1"> - Hacker  </span>
-            <span v-if="faction === 'Faim' && profile.type === 'blindé' "> - Titan </span>
-            <span v-if="faction === 'Domination' && profile.type === 'infanterie' " > - Éternel </span> 
+            <span v-if="faction === 'Fortune' && profile.originalFaction === 'Science' && profile.grade != null && profile.grade >= 1"> - Hacker  </span>
+            <!-- <span v-if="faction === 'Faim' && profile.type === 'blindé' "> - Titan </span> -->
+            <!-- <span v-if="faction === 'Domination' && profile.type === 'infanterie' " > - Éternel </span>  -->
             <span v-if="faction === 'Domination' && profile.grade != null && profile.grade >= 1"> - Neuromech </span>
+            <!-- <span v-if="faction === 'Ordre' "> - Professionnel </span> -->
+            <span v-if="faction === 'Fortune'"> Clandestinité </span>
         </section>
         <section class="ps_section ps_weapons">
             <table class="ps_table">
