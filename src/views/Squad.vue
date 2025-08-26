@@ -112,6 +112,20 @@
             return 100;
         }
     });
+    const igualdadCostLimit = computed(() => {
+        return totalCost.value / 2;
+    });
+    const igualdadCost = computed(() => {
+        return squad.value.profiles.reduce((sum, p) => {
+            if(p.name.includes("Igualdad")) {
+                return sum + p.cost;
+            }
+        }, 0);
+    });
+
+    const tooMuchIgualdadCost = computed(() => {
+        return igualdadCost.value > igualdadCostLimit.value;
+    });
 
     const tooMuchBlindes = computed(() => {
         return blindesNb.value > blindesLimit.value;
@@ -225,7 +239,7 @@
         }, 0) + getEquipmentCost();
     });
 
-    function addProfile(profile) {
+    function addProfile(profile, oneShot = false) {
         profile.archive = profile.name;
         profile.oldWeapons = [...profile.weapons];
         profile.equipment = [];
@@ -236,6 +250,9 @@
             profile.grade = profile.rank;
         }
         squad.value.profiles.push(JSON.parse(JSON.stringify(profile)));
+        if(faction.name === 'Égalité' && profile.name.includes('Igualdad Soldado') && oneShot === false) {
+            addProfile(profile, true);
+        }
     }
     function removeProfile(index) {
         squad.value.profiles.splice(index, 1);
@@ -380,7 +397,7 @@
     
         <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
 
-        <Alert :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" :too-much-grades="tooMuchGrades" :too-much-blindes="tooMuchBlindes" />
+        <Alert v-bind:too-much-igualdad="tooMuchIgualdadCost" :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" :too-much-grades="tooMuchGrades" :too-much-blindes="tooMuchBlindes" />
 
         <div class="squad_modes">
             <div v-for="modeItem in modes" class="squad_mode">
