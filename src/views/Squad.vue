@@ -9,6 +9,7 @@
     import Alert from "../components/Alert.vue";
     import ButtonMode from "../components/ButtonMode.vue";
     import Captain from "../components/Captain.vue";
+import SpecialRules from "../components/SpecialRules.vue";
 
     const printArea = ref(null);
     const route = useRoute();
@@ -460,6 +461,8 @@
         <Resume v-model:squadName="squadName" :faction="faction.name" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
         <Captain v-if="captain != null" :captain="captain" />
 
+
+
         <div class="print">
             <button class="print_btn" @click="print">&#x1F5A8</button>
         </div>
@@ -512,6 +515,9 @@
                 :chosen-mode="mode"
             />
             <Captain v-if="captain != null" :captain="captain" :is-for-print="isForPrint" />
+
+            <SpecialRules :faction="faction" />
+
             <div class="print-separator"></div>         <!-- 👈 -->
 
             <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
