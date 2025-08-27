@@ -1,4 +1,35 @@
 <script setup>
+    /**
+     * @component Sticker
+     * @description
+     * Composant visuel représentant une **faction sous forme de vignette** (sticker).
+     *
+     * Fonctionnalités :
+     * - Affiche le logo d’une faction.
+     * - Affiche le nom de la faction sous le logo.
+     * - Sert généralement d’élément cliquable (utilisé dans `Grid.vue` à l’intérieur d’un `Linker`).
+     *
+     * Exemple d’utilisation :
+     * ```vue
+     * <Sticker :faction="faction" />
+     * ```
+     *
+     * Exemple de donnée faction :
+     * ```js
+     * const faction = {
+     *   name: "Égalité",
+     *   logo: "/img/factions/egalite.svg"
+     * };
+     * ```
+    */
+
+    /**
+     * @prop {Object} faction
+     * Objet représentant une faction.
+     * Champs attendus :
+     * - `name {string}` : nom de la faction
+     * - `logo {string}` : chemin de l’image/logo de la faction
+    */
     const props = defineProps({
         faction: {
             type: Object,

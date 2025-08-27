@@ -1,7 +1,27 @@
 <script setup>
-const props = defineProps({
-  title: String
-})
+  /**
+   * @component Header
+   * @description
+   * En-tête principal de l’application **Mars Code Aurora : constructeur d’escouade**.
+   *
+   * Fonctionnalités :
+   * - Affiche un titre fixe "Mars Code Aurora : constructeur d’escouade".
+   * - Affiche un bandeau décoratif avec un logo cliquable (retour vers la page Factions).
+   * - Affiche dynamiquement un sous-titre (headline) passé en prop `title`.
+   *
+   * Exemple d’utilisation :
+   * ```vue
+   * <Header title="Choix de la faction" />
+   * ```
+  */
+
+  /**
+   * @prop {string} title
+   * Texte affiché dans le bandeau comme sous-titre contextuel de la page courante.
+  */
+  const props = defineProps({
+    title: String
+  })
 </script>
 
 <template>

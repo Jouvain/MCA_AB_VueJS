@@ -1,5 +1,19 @@
 <script setup>
-
+/**
+ * @component ButtonCTA
+ * @description
+ * Bouton d’appel à l’action (CTA : Call To Action).
+ *
+ * Fonctionnalités :
+ * - Affiche un bouton stylisé "Créer une escouade".
+ * - Ne prend actuellement aucune prop ni event.
+ * - Peut être enrichi ultérieurement (label dynamique, événements @click).
+ *
+ * Exemple d’utilisation :
+ * ```vue
+ * <ButtonCTA @click="handleCreateSquad" />
+ * ```
+ */
 </script>
 
 <template>

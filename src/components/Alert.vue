@@ -1,4 +1,41 @@
 <script setup >
+
+/**
+ * @component Alert
+ * @description
+ * Composant d’alerte affichant les violations des règles de composition
+ * d’une escouade (coût, officiers, grades, blindés, etc.).
+ *
+ * Fonctionnement :
+ * - Le composant reçoit un ensemble de drapeaux booléens en props.
+ * - Si au moins un drapeau est vrai, un bloc d’alerte est affiché.
+ * - Chaque règle violée est affichée comme un détail dans l’alerte.
+ *
+ * Utilisation :
+ * ```vue
+ * <Alert
+ *   :too-expensive="tooExpensive"
+ *   :too-much-offciers="tooMuchOffciers"
+ *   :too-much-grades="tooMuchGrades"
+ *   :too-much-blindes="tooMuchBlindes"
+ *   :too-much-igualdad="tooMuchIgualdad"
+ * />
+ * ```
+ */
+
+ /**
+ * @prop {boolean} tooExpensive
+ * Indique si l’escouade dépasse le nombre maximum de points autorisés.
+ * @prop {boolean} tooMuchOffciers
+ * Indique si l’escouade contient trop d’officiers par rapport à la limite.
+ * @prop {boolean} tooMuchGrades
+ * Indique si un officier a un grade trop élevé.
+ * @prop {boolean} tooMuchBlindes
+ * Indique si l’escouade contient trop de blindés (ou si interdits par le mode).
+ * @prop {boolean} tooMuchIgualdad
+ * Indique si l’escouade dépasse la limite de 50 % de profils "Igualdad".
+ */
+
     const props = defineProps({
         tooExpensive: {type: Boolean},
         tooMuchOffciers: {type: Boolean},

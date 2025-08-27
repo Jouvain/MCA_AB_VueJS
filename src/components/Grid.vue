@@ -1,7 +1,43 @@
 <script setup>
-    import Linker from './Linker.vue';
-import Sticker from './Sticker.vue';
+    /**
+     * @component Grid
+     * @description
+     * Composant qui affiche une grille de factions disponibles.
+     *
+     * Fonctionnalités :
+     * - Reçoit un tableau de factions en prop.
+     * - Pour chaque faction, affiche un `Sticker` cliquable.
+     * - Chaque `Sticker` est encapsulé dans un `Linker` qui redirige vers la vue `Faction`
+     *   correspondante (basée sur le `slug` de la faction).
+     *
+     * Exemple d’utilisation :
+     * ```vue
+     * <Grid :factions="factions" />
+     * ```
+     *
+     * Exemple de donnée `faction` :
+     * ```js
+     * {
+     *   name: "Égalité",
+     *   slug: "egalite",
+     *   profiles: [...],
+     *   specialties: [...]
+     * }
+     * ```
+    */
 
+    import Linker from './Linker.vue';
+    import Sticker from './Sticker.vue';
+
+
+    /**
+     * @prop {Object[]} factions
+     * Tableau des factions à afficher.
+     * Chaque faction doit contenir :
+     * - `slug {string}` : identifiant unique pour la route
+     * - `name {string}` : nom de la faction
+     * - (autres champs facultatifs : `profiles`, `specialties`, etc.)
+    */    
     const props = defineProps({
         factions: {
             type: Array,
@@ -15,7 +51,6 @@ import Sticker from './Sticker.vue';
         <Linker v-for="faction in factions" :to="{name: 'faction', params: {slug: faction.slug}}" class="grid_linker">
             <Sticker :faction="faction" />
         </Linker>
-        <!-- <Sticker v-for="faction in factions" :faction="faction"></Sticker> -->
     </div>
 </template>
 

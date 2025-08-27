@@ -1,8 +1,56 @@
 <script setup>
+    /**
+     * @component Resume
+     * @description
+     * Composant d’affichage et d’édition du **résumé d’une escouade**.
+     *
+     * Fonctionnalités :
+     * - Affiche le nom de l’escouade.
+     * - Affiche les coûts de composition (points d’armée, officiers).
+     * - Calcule et affiche dynamiquement les limites (selon mode choisi et faction).
+     * - Permet de renommer l’escouade si on n’est pas en mode impression.
+     *
+     * Modes :
+     * - **Normal** : affichage interactif + bouton pour modifier le nom.
+     * - **Impression** (`isForPrint = true`) : présentation compacte et non éditable.
+     *
+     * Exemple d’utilisation :
+     * ```vue
+     * <Resume
+     *   v-model:squadName="squadName"
+     *   :squad-cost="totalCost"
+     *   :squad-officer-nb="officerNb"
+     *   :chosen-mode="mode"
+     *   :faction="faction.name"
+     *   :is-for-print="false"
+     * />
+     * ```
+    */
     import { defineModel, defineProps, toRefs, ref, computed } from 'vue'
 
+    /**
+     * @model squadName
+     * Nom de l’escouade (supporte v-model).
+     * @type {string}
+    */
     const squadNameModel = defineModel('squadName', { type: String, default: '' })
 
+    /**
+     * @prop {number} squadCost
+     * Coût total de l’escouade (points d’armée).
+     *
+     * @prop {number} squadOfficerNb
+     * Nombre d’officiers dans l’escouade.
+     *
+     * @prop {string} chosenMode
+     * Mode de jeu choisi (ex. "Blitz", "Standard", "Héroïque").
+     *
+     * @prop {boolean} [isForPrint=false]
+     * Indique si le composant doit s’afficher en mode impression.
+     *
+     * @prop {string} [faction=""]
+     * Nom de la faction de l’escouade (utile pour règles spécifiques comme Domination).
+    */
     const props = defineProps({
         squadCost: { type: Number, default: 0 },
         squadOfficerNb: {type: Number, default: 0},
@@ -12,6 +60,11 @@
     })
     const { squadCost, squadOfficerNb, chosenMode, faction } = toRefs(props)
 
+    /**
+     * Limite d’officiers calculée dynamiquement.
+     * - Blitz ou Domination → max 1
+     * - Autres cas → max 3
+    */
     const officerLimit = computed(() => {
         if(chosenMode.value === 'Blitz' || faction.value === "Domination") {
             return 1;
@@ -20,6 +73,12 @@
         }      
     })
 
+    /**
+     * Limite de points selon le mode choisi.
+     * - Blitz : 15
+     * - Héroïque : 30
+     * - Standard (par défaut) : 25
+     */
     const squadLimit = computed(() => {
         if(chosenMode.value === 'Blitz') {
             return 15;
@@ -30,6 +89,11 @@
         }
     })
 
+    
+    /**
+     * Indique si le formulaire de modification du nom est actif.
+     * @type {import("vue").Ref<boolean>}
+     */
     const isEditing = ref(false);
 
 </script>

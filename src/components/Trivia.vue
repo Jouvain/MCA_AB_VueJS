@@ -1,4 +1,36 @@
 <script setup>
+    /**
+     * @component Trivia
+     * @description
+     * Composant qui affiche une **présentation courte d’une faction** sous forme de "trivia".
+     *
+     * Fonctionnalités :
+     * - Affiche le logo de la faction.
+     * - Affiche sa description textuelle.
+     * - Utilisé dans la vue **Faction** comme encart de présentation rapide.
+     *
+     * Exemple d’utilisation :
+     * ```vue
+     * <Trivia :faction="faction" />
+     * ```
+     *
+     * Exemple de donnée faction :
+     * ```js
+     * const faction = {
+     *   name: "Fortune",
+     *   logo: "/img/factions/fortune.svg",
+     *   description: "Une faction opportuniste, maîtresse dans l’art de combiner les atouts des autres."
+     * };
+     * ```
+    */
+
+    /**
+     * @prop {Object} faction
+     * Objet représentant la faction.
+     * Champs attendus :
+     * - `logo {string}` : chemin de l’image/logo de la faction
+     * - `description {string}` : texte descriptif de la faction
+    */
     const props = defineProps({
         faction: {
             type: Object,

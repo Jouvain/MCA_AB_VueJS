@@ -1,6 +1,44 @@
 <script setup>
-import { ref } from 'vue';
 
+    /**
+     * @component Captain
+     * @description
+     * Composant d’édition et d’affichage du **Capitaine** de l’escouade.
+     *
+     * Fonctionnalités :
+     * - Affiche le nom du capitaine sélectionné.
+     * - Permet de choisir une doctrine (spécialité) parmi une liste prédéfinie.
+     * - Si `isForPrint` est vrai, le formulaire est masqué (mode impression).
+     *
+     * Exemple d’utilisation :
+     * ```vue
+     * <Captain :captain="captain" :is-for-print="false" />
+     * ```
+     *
+     * Exemple de donnée capitaine :
+     * ```js
+     * const captain = {
+     *   name: "Marcus",
+     *   doctrine: "Stratège"
+     * };
+     * ```
+    */
+
+    import { ref } from 'vue';
+
+
+    /**
+     * @prop {Object} captain
+     * Objet représentant le profil du capitaine.
+     * Doit contenir au minimum :
+     * - `name {string}` : le nom du capitaine
+     * - `doctrine {string|null}` : doctrine choisie (optionnelle, éditable)
+     *
+     * @prop {boolean} [isForPrint=false]
+     * Indique si le composant doit s’afficher en mode impression.
+     * - `false` : formulaire interactif affiché
+     * - `true` : seul le nom et la doctrine sont affichés
+    */    
     const props = defineProps({
         captain: {
             type: Object,
@@ -9,6 +47,10 @@ import { ref } from 'vue';
         isForPrint: {type: Boolean, default: false}
     })
 
+    /**
+     * Liste des doctrines disponibles pour le capitaine.
+     * @type {import("vue").Ref<string[]>}
+    */
     const doctrines = ref([
         'Barbare',
         'Commando',

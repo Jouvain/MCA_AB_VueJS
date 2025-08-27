@@ -1,5 +1,104 @@
 <script setup>
-import { computed, toRefs, ref, watch } from 'vue';
+    /**
+     * @component ProfileSheet
+     * @description
+     * Composant qui représente une **fiche de profil d’unité** dans le builder d’armée.
+     *
+     * Fonctionnalités :
+     * - Affiche les infos essentielles du profil : nom, grade, caractéristiques, règles spéciales, armes.
+     * - Mode `add` : permet d’ajouter une unité à une escouade.
+     * - Mode `edit` : permet de modifier, équiper, grader, spécialiser ou supprimer une unité existante.
+     * - Gère des interactions spéciales liées aux factions (ex. Fortune, Domination, Science...).
+     * - Calcule le coût effectif du profil selon son grade, ses règles spéciales et son équipement.
+     *
+     * Exemple d’utilisation :
+     * ```vue
+     * <ProfileSheet
+     *   :profile="profile"
+     *   mode="edit"
+     *   :roles="faction.specialties"
+     *   :items="items"
+     *   :battle-mode="mode"
+     *   :captain-nb="captainNb"
+     *   :faction="faction.name"
+     *   @add="addProfile(profile)"
+     *   @delete="removeProfile(i)"
+     *   @reset="resetProfile(profile)"
+     *   @heroe="becomeHeroe(profile)"
+     * />
+     * ```
+    */
+
+    import { computed, toRefs, ref, watch } from 'vue';
+    /* -------------------------------------------------------------------------- */
+    /*                                Props & Emits                               */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @prop {Object} profile
+     * Profil d’unité à afficher/éditer.
+     * Champs attendus :
+     * - `name {string}`
+     * - `type {"infanterie"|"blindé"}`
+     * - `rank {number}` (1 à 3)
+     * - `grade {number}` (0 à 3)
+     * - `cost {number}`
+     * - `move {number}`, `endurance {number}`, `will {number}`, `combat {number}`
+     * - `weapons {Array<{name: string, Longueur: number|string, Rafale: number|string, Puissance: number|string}>}`
+     * - `specialRule {string|null}`
+     * - `specialRoles {string[]}`
+     * - `equipment {string[]}`
+     * - (optionnels) `isCaptain`, `meleeHeroe`, `originalFaction`
+    */
+    
+    /**
+     * @prop {string} [mode]
+     * Définit le mode d’affichage :
+     * - `"add"` : ajout d’un profil à une escouade
+     * - `"edit"` : édition d’un profil déjà dans l’escouade
+     * - `undefined` : affichage statique (lecture seule)
+    */
+
+    /**
+     * @prop {number} [index]
+     * Index du profil dans la liste, utile pour les mises à jour.
+     */
+
+    /**
+     * @prop {string[]} [specialtyOptions]
+     * Ancienne liste de spécialités possibles (remplacée par `roles`).
+    */
+
+    /**
+     * @prop {boolean} [canGrade=true]
+     * Indique si le profil peut recevoir un grade supplémentaire.
+    */
+
+    /**
+     * @prop {string[]} [roles]
+     * Spécialités disponibles pour la faction.
+    */
+
+    /**
+     * @prop {string[]} [items]
+     * Liste globale des équipements sélectionnables.
+    */
+
+    /**
+     * @prop {string} [battleMode="Standard"]
+     * Mode de bataille actuel : `"Blitz"`, `"Standard"`, ou `"Héroïque"`.
+    */
+
+    /**
+     * @prop {number} [captainNb=0]
+     * Nombre actuel de capitaines dans l’escouade.
+    */
+
+    /**
+     * @prop {string} [faction=""]
+     * Nom de la faction (utilisé pour certaines règles conditionnelles).
+    */
+
 
     const props = defineProps({
         profile: {
@@ -42,18 +141,43 @@ import { computed, toRefs, ref, watch } from 'vue';
         }
     });
 
+
+    /**
+     * @emits add(profile)    → Ajoute un profil à l’escouade
+     * @emits edit(profile)   → Édite un profil (peu utilisé car édition inline)
+     * @emits delete(profile) → Supprime un profil de l’escouade
+     * @emits reset(profile)  → Réinitialise un profil à son état original
+     * @emits lighter()       → Transforme un blindé en "Structure légère"
+     * @emits heroe()         → Rend une unité héroïque
+     * @emits melee()         → Ajoute la règle "Héros de mêlée"
+     * @emits captain()       → Désigne le profil comme capitaine
+    */    
     const emit = defineEmits(['add', 'edit', 'delete', 'reset', 'lighter', 'heroe', 'melee', 'captain']);
 
+
+    /* -------------------------------------------------------------------------- */
+    /*                              State & Watchers                              */
+    /* -------------------------------------------------------------------------- */  
+    
+    
     const isEditing = ref(false);
     const localGrade = ref(props.profile.grade ?? 0);
     const localSpecs = ref(props.profile.specialties ?? []);
 
+    /** Synchronise les refs locales si le profil est remplacé */
     watch(() => props.profile, (p) => {
         localGrade.value = p?.grade ?? 0
         localSpecs.value = p?.specialties ?? []
     }, {deep: true});
 
+    /* -------------------------------------------------------------------------- */
+    /*                               Méthodes utiles                              */
+    /* -------------------------------------------------------------------------- */
 
+    /**
+     * Sauvegarde des modifications locales de grade/spécialités
+     * puis émet un événement `update`.
+    */
     function save() {
         emit('update', {
             index: props.index,
@@ -63,6 +187,10 @@ import { computed, toRefs, ref, watch } from 'vue';
         isEditing.value = false;
     }
 
+    /**
+     * Remplace une arme par défaut par une arme de mêlée standard.
+     * @param {number} index - Index de l’arme à remplacer
+    */
     function replaceWeapon(index) {
         const newWeapon = {
             name: "Arme de mêlée",
@@ -73,10 +201,19 @@ import { computed, toRefs, ref, watch } from 'vue';
         props.profile.weapons.splice(index, 1, newWeapon);
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                                  Computed                                  */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * Indique si l’unité est "Brutal" :
+     * - vrai si elle possède au moins deux armes de mêlée (Longueur === 0).
+    */
     const isBrutal = computed(() => {
         return props.profile.weapons.filter(w => w.Longueur === 0).length >= 2;
     });
 
+    /** Règles spéciales du profil (chaîne ou vide si null). */
     const specialRuleList = computed(() => {
         if(props.profile.specialRule === null) {
             return "";
@@ -87,6 +224,14 @@ import { computed, toRefs, ref, watch } from 'vue';
 
     const { faction } = toRefs(props)
 
+
+    /**
+     * Coût total effectif de l’unité (base + grade + bonus selon règles spéciales).
+     * - +1 si le profil a une spécialité.
+     * - +1 si le profil est "Héroïque".
+     * - +1 si c’est un "Héros de mêlée".
+     * - +1 si faction = Fortune et le profil inclut "avec".
+    */    
     const effectiveCost = computed( () => {
         let specialtyCost = 0;
         if(props.profile.specialRoles.length > 0) {
