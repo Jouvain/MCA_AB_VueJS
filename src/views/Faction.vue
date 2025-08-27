@@ -1,4 +1,22 @@
 <script setup>
+    /**
+    * @view Faction
+    * @description
+    * Vue affichant le détail d’une faction sélectionnée.
+    *
+    * Fonctionnalités principales :
+    * - Récupère la faction courante à partir du paramètre `slug` de la route.
+    * - Affiche le titre, les infos générales (Trivia), et les règles spéciales de la faction.
+    * - Liste les profils disponibles via le composant `ProfileSheet`.
+    * - Propose un bouton d’appel à l’action pour créer une escouade.
+    *
+    * Cas particulier :
+    * - Si la faction est **Fortune**, ses profils sont générés dynamiquement :
+    *   - Fusion de tous les profils des autres factions.
+    *   - Ajout d’un champ `originalFaction` pour tracer l’origine de chaque profil.
+    *   - Les spécialités de Fortune sont conservées.
+    */
+
     import Header from "../components/Header.vue";
     import ProfileSheet from "../components/ProfileSheet.vue";
     import { useRoute } from "vue-router";
@@ -8,9 +26,23 @@
     import ButtonCTA from "../components/ButtonCTA.vue";
     import Linker from "../components/Linker.vue";
 
+    /**
+    * Paramètre de route représentant la faction sélectionnée.
+    * @type {string}
+    */
     const route = useRoute();
     const currentSlug = route.params.slug;
-    // const faction = dataFactions.factions.find(f => f.name === currentSlug);
+
+    /**
+    * Faction courante sélectionnée.
+    * Si `Fortune` est choisie, construit une version enrichie avec tous les profils des autres factions.
+    *
+    * @typedef {Object} Faction
+    * @property {string} name - Nom de la faction.
+    * @property {Object[]} profiles - Profils de la faction.
+    * @property {string} [profiles[].originalFaction] - Faction d’origine du profil (si Fortune).
+    * @property {Object[]} specialties - Spécialités de la faction.
+    */
     let faction = dataFactions.factions.find(f => f.name === currentSlug);
 
     if(faction?.name === 'Fortune') {
@@ -40,10 +72,6 @@
 
     }
 
-    function testBtn() {
-        console.log("Bouton cliqué, ça marche");
-    }
-
 </script>
 
 <template>
@@ -67,7 +95,7 @@
 
         <div class="gallery">
             <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
-                <ProfileSheet :profile="profile"  mode="" @add="testBtn" @edit="testBtn"/>
+                <ProfileSheet :profile="profile"  mode=""  />
             </div>
         </div>
     </main>

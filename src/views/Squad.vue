@@ -1,4 +1,30 @@
 <script setup>
+    /**
+    * @view Squad
+    * @description
+    * Vue principale pour composer une escouade à partir des profils d’une faction.
+    *
+    * Fonctionnalités principales :
+    * - Récupère la faction courante via le `slug` de la route.
+    * - Permet d’ajouter/retirer des profils et de modifier leurs propriétés (grades, équipements, rôles spéciaux).
+    * - Calcule automatiquement le coût total de l’escouade et applique des contraintes selon le mode de jeu.
+    * - Affiche des alertes (trop de grades, officiers, blindés, etc.).
+    * - Propose différents modes de partie (Blitz, Standard, Héroïque).
+    * - Gère la responsivité (vue mobile avec bascule Faction / Escouade).
+    * - Génère un PDF imprimable de l’escouade (via `html2pdf.js`).
+    *
+    * Cas particuliers :
+    * - Faction **Fortune** : fusionne tous les profils et spécialités des autres factions.
+    * - Faction **Égalité** : double automatiquement certains profils ("Igualdad Soldado").
+    * - Faction **Domination** : limite des officiers spécifique.
+    */
+
+    /* 
+    ***********
+    * IMPORTS *
+    ***********
+    */
+
     import Header from "../components/Header.vue"
     import ProfileSheet from "../components/ProfileSheet.vue";
     import { useRoute } from "vue-router";
@@ -9,34 +35,46 @@
     import Alert from "../components/Alert.vue";
     import ButtonMode from "../components/ButtonMode.vue";
     import Captain from "../components/Captain.vue";
-import SpecialRules from "../components/SpecialRules.vue";
+    import SpecialRules from "../components/SpecialRules.vue";
 
-    const printArea = ref(null);
+    /*
+    ****************************
+    * ROUTE ET DONNEES DE BASE *
+    ****************************
+    */
+
+    /**
+    * Paramètre de route : slug de la faction choisie.
+    * @type {string}
+    */
     const route = useRoute();
+    /**
+    * Slug actualisé via le slug enregistré dans la route
+    * @type {string}
+    */
     const currentSlug = route.params.slug;
-    // const faction = dataFactions.factions.find(f => f.name === currentSlug);
+
+    /**
+    * Faction courante, enrichie selon règles spéciales (Fortune, etc.).
+    * @type {Object}
+    */
     let faction = dataFactions.factions.find(f => f.name === currentSlug);
 
-    if(faction?.name === 'Fortune') {
-        // Fusionne tous les profils et spécialités des autres factions
-        const allOtherFactions = dataFactions.factions.filter(f => f.name !== "Fortune");
 
+    if(faction?.name === 'Fortune') {
+        const allOtherFactions = dataFactions.factions.filter(f => f.name !== "Fortune");
         const combinedProfiles = allOtherFactions.flatMap(f =>
             (f.profiles || []).map(p => ({
                 ...p, // clone
                 originalFaction: f.name // ajout du champ
             }))
         );
-
-        // const combinedProfiles = allOtherFactions.flatMap(f => f.profiles || []);
-        // const combinedSpecialties = allOtherFactions.flatMap(f => f.specialties || []);
         const combinedSpecialties = Array.from(
             new Set(
                 allOtherFactions.flatMap(f => f.specialties || [])
             )
         );
 
-        // On crée une version étendue de Fortune sans toucher au JSON source
         faction = {
             ...faction,
             profiles: combinedProfiles,
@@ -44,31 +82,82 @@ import SpecialRules from "../components/SpecialRules.vue";
         };        
     }
 
-    const mode = ref('Standard');
+    /**
+     * Liste des équipements attribuables à un combattant
+     * @type {array}
+     */
+    const items = dataFactions.items;
 
+    /*
+    ***********************
+    * VARIABLES REACTIVES *
+    ***********************
+    */
+
+    // ********** Gestion MODE DE JEU **********
+    /**
+    * Mode de jeu courant (Blitz, Standard, Héroïque).
+    * @type {import("vue").Ref<string>}
+    */    
+    const mode = ref('Standard');
+    /** Modifie le mode de jeu courant. */
     function modifyMode(newMode) {
         mode.value = newMode;
     }
-
-    const isForPrint = ref(true);
-
-    const items = dataFactions.items;
-    const squadName = ref('Escouade ' + faction.name)
-    const squadCost = ref(0)
-    const activePanel = ref("faction");
-    const isMobile = ref(window.innerWidth <= 500);
-    function updateIsMobile() {
-        isMobile.value = window.innerWidth <= 500;
-    }
-
+    /**
+     * Modes de jeu possibles
+     * @type {array de strings}
+     */
     const modes = ['Blitz', 'Standard', 'Héroïque'];
 
+    // ********* Gestion IMPRESSION PDF *********
+    /**
+    * Référence au DOM pour l’impression PDF.
+    * @type {import("vue").Ref<HTMLElement|null>}
+    */
+    const printArea = ref(null);
+    /**
+     * État "pour impression".
+     * @type {import("vue").Ref<boolean>}
+     */
+    const isForPrint = ref(true);
+
+    // ********* Gestion de l'ESCOUADE *********
+    /**
+    * Nom affiché de l’escouade.
+    * @type {import("vue").Ref<string>}
+    */
+    const squadName = ref('Escouade ' + faction.name)
+    /**
+    * Escouade en cours de composition.
+    * @type {import("vue").Ref<{name:string, mode:string, profiles:Object[]}>}
+    */    
     const squad = ref({
         name: 'Escouade anonyme',
         mode: 'STANDARD',
         profiles: []
     })
 
+
+    // ********** Gestion RESPONSIVE *********
+    /**
+    * En version mobile, quelle roster (la faction ou l'escouade) est actif/visible 
+    */
+    const activePanel = ref("faction");
+    /**
+    * Indique si on est en affichage mobile.
+    * @type {import("vue").Ref<boolean>}
+    */    
+    const isMobile = ref(window.innerWidth <= 500);
+    function updateIsMobile() {
+        isMobile.value = window.innerWidth <= 500;
+    }
+
+
+    // ********** Gestion des RECENSEMENTS ********
+    /**
+    * Nombre total d’officiers.
+    */
     const officerNb = computed(() => {
         return squad.value.profiles.reduce( (sum, p) => {
             let officers = 0;
@@ -79,7 +168,9 @@ import SpecialRules from "../components/SpecialRules.vue";
             return sum + officers;
         }, 0);
     });
-
+    /**
+    * Nombre total de blindés.
+    */
     const blindesNb = computed(() => {
         return squad.value.profiles.reduce((sum, p) => {
             let blindes = 0;
@@ -89,7 +180,63 @@ import SpecialRules from "../components/SpecialRules.vue";
             return sum + blindes;
         }, 0);
     });
+    /**
+     * Niveaux cumulés des grades
+     * @type {number}
+     */
+    const totalGrades = computed(() => {
+        return squad.value.profiles.reduce((sum, p) => {
+            return sum + p.grade;
+        }, 0);
+    });
+        /**
+     * Profil du Capitaine
+     * @type {profile}
+     */
+    const captain = computed(() => {
+        let foundCaptain = squad.value.profiles.find(p => p.isCaptain === true);
+        return foundCaptain;
+    });
+    /**
+     * Nombre de capitaines (1 ou 0)
+     */
+    const captainNb = computed(() => {
+        let captains = 0;
+        return squad.value.profiles.reduce((sum, p) => {
+            if(p.isCaptain != null && p.isCaptain === true) {
+                captains += 1;
+            }
+            return sum + captains;
+        }, 0);
+    });
+    /**
+    * Coût total de l’escouade incluant profils, grades, rôles spéciaux et équipements.
+    */
+    const totalCost = computed(() => {
+        // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
+        return squad.value.profiles.reduce( (sum, p) => {
+            let specialCost;
+            p.specialRoles.length > 0 ? specialCost = 1 : specialCost = 0;
+            if(p.specialRule != null && p.specialRule.includes('Héroïque')) {
+                specialCost += 1;
+            }
+            if(p.meleeHeroe != null && p.meleeHeroe === true) {
+                specialCost += 1;
+            }
+            if(faction.name === 'Fortune' && p.name.includes("avec")) {
+                specialCost += 1;
+            }
+            const gradeCost = p.grade ?? 0;
+            return sum + p.cost + gradeCost + specialCost;
+        }, 0) + getEquipmentCost();
+    });
 
+
+    // ********* Gestion des LIMITES pour alerte *********
+    /**
+    * Contraintes calculées dynamiquement :
+    * - Limite de coût selon le mode
+    */    
     const costLimit = computed (() => {
         if(mode.value === 'Blitz') {
             return 15;
@@ -99,6 +246,10 @@ import SpecialRules from "../components/SpecialRules.vue";
             return 30;
         }
     });
+    /**
+    * Contraintes calculées dynamiquement :
+    * - Limite d’officiers selon la faction ou le mode
+    */  
     const officersLimit = computed (() => {
         if(mode.value === 'Blitz' || faction.name === 'Domination') {
             return 1;
@@ -106,6 +257,10 @@ import SpecialRules from "../components/SpecialRules.vue";
             return 3;
         }
     });
+    /**
+    * Contraintes calculées dynamiquement :
+    * - Limite de grades selon le mode
+    */  
     const gradeLimit = computed(() => {
         if(mode.value === 'Blitz') {
             return 1;
@@ -113,6 +268,10 @@ import SpecialRules from "../components/SpecialRules.vue";
             return 100;
         }
     });
+    /**
+    * Contraintes calculées dynamiquement :
+    * - Limite de blindés selon le mode
+    */  
     const blindesLimit = computed(() => {
         if(mode.value === 'Blitz') {
             return 0;
@@ -120,9 +279,16 @@ import SpecialRules from "../components/SpecialRules.vue";
             return 100;
         }
     });
+    /**
+     * Contraintes calculées dynamiquement :
+     * - Limite en coût d'Igualdad Soldados avec l'Égalité
+     */
     const igualdadCostLimit = computed(() => {
         return totalCost.value / 2;
     });
+    /**
+     * Coût dynamique cumulé en soldats Igualdad
+     */
     const igualdadCost = computed(() => {
         return squad.value.profiles.reduce((sum, p) => {
             if(p.name.includes("Igualdad")) {
@@ -131,26 +297,51 @@ import SpecialRules from "../components/SpecialRules.vue";
         }, 0);
     });
 
+    // *********** Gestion des DEPASSEMENTS DE LIMITE **********
+    /**
+     * Dépassement en coût d'Igualdad
+     * @type {boolean}
+     */
     const tooMuchIgualdadCost = computed(() => {
         return igualdadCost.value > igualdadCostLimit.value;
     });
-
+    /**
+     * Dépassement en nombre de blindés
+     * @type {boolean}
+     */
     const tooMuchBlindes = computed(() => {
         return blindesNb.value > blindesLimit.value;
     });
-
+    /**
+     * Dépassement en coût total
+     * @type {boolean}
+     */
     const tooExpensive = computed (() => {
         return totalCost.value > costLimit.value;
     })
-
+    /**
+     * Dépassement en nombre d'officiers
+     * @type {boolean}
+     */
     const tooMuchOffciers = computed( () => {
         return officerNb.value > officersLimit.value;
     });
-
+    /**
+     * Dépassement en niveaux cumulés de grade
+     * @type {boolean}
+     */
     const tooMuchGrades = computed(() => {
         return totalGrades.value > gradeLimit.value;
     });
 
+
+    /*
+    ********************
+    * FONCTIONS METIER *
+    ********************
+    */
+
+    /** Attribue la règle "Héroïque" à un profil. */
     function becomeHeroe(profile) {
         let newRule = " Héroïque";
         if (!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
@@ -160,11 +351,16 @@ import SpecialRules from "../components/SpecialRules.vue";
             profile.specialRule = profile.specialRule + newRule;   
         }        
     }
-
+    /** Attribue le rôle de Capitaine à un profil */
     function becomeCaptain(profile) {
         profile.isCaptain = true;
     }
-
+    /** 
+     * Fait d'un profil "Héroïque" un expert en mêlée :
+     * - SOIT en obtenant une arme de mêlée
+     * - SOIT en devenant Brutal s'il est déjà armé
+     * - !! S'il est déjà armé et Brutal, il ne se passe rien !!
+     */
     function becomeMeleeHeroe(profile) {
         if(profile.meleeHeroe != null && profile.meleeHeroe === true) {
             return;
@@ -189,7 +385,7 @@ import SpecialRules from "../components/SpecialRules.vue";
             profile.specialRule = profile.specialRule + newRule
         }
     }
-
+    /** Attribue la règle Structure Légère et modifie le profil d'un Blindé */
     function addLightStructure(profile) {
         let newRule = " Structure légère";
         if (!profile.specialRule || profile.specialRule === null || profile.specialRule === undefined) {
@@ -201,52 +397,7 @@ import SpecialRules from "../components/SpecialRules.vue";
             profile.move = profile.move + 10;  
         }
     }
-
-    const totalGrades = computed(() => {
-        return squad.value.profiles.reduce((sum, p) => {
-            return sum + p.grade;
-        }, 0);
-    });
-
-    const captain = computed(() => {
-        let foundCaptain = squad.value.profiles.find(p => p.isCaptain === true);
-        function addProperty(object, property) {
-            return Object.assign(object, { [property]: null });
-        }
-        // let foundCaptain = addProperty(squad.value.profiles.find(p => p.isCaptain === true), doctrine)
-        return foundCaptain;
-    });
-
-
-    const captainNb = computed(() => {
-        let captains = 0;
-        return squad.value.profiles.reduce((sum, p) => {
-            if(p.isCaptain != null && p.isCaptain === true) {
-                captains += 1;
-            }
-            return sum + captains;
-        }, 0);
-    });
-
-    const totalCost = computed(() => {
-        // return squad.value.profiles.reduce((sum, p) => sum + p.cost, 0);
-        return squad.value.profiles.reduce( (sum, p) => {
-            let specialCost;
-            p.specialRoles.length > 0 ? specialCost = 1 : specialCost = 0;
-            if(p.specialRule != null && p.specialRule.includes('Héroïque')) {
-                specialCost += 1;
-            }
-            if(p.meleeHeroe != null && p.meleeHeroe === true) {
-                specialCost += 1;
-            }
-            if(faction.name === 'Fortune' && p.name.includes("avec")) {
-                specialCost += 1;
-            }
-            const gradeCost = p.grade ?? 0;
-            return sum + p.cost + gradeCost + specialCost;
-        }, 0) + getEquipmentCost();
-    });
-
+    /** Ajoute le profil à la liste de profil de l'escouade */
     function addProfile(profile, oneShot = false) {
         profile.archive = profile.name;
         profile.oldWeapons = [...profile.weapons];
@@ -269,38 +420,13 @@ import SpecialRules from "../components/SpecialRules.vue";
         if(profile.specialRule != null && profile.specialRule.includes("Poste mobile")) {
             const lastProfile = squad.value.profiles[squad.value.profiles.length - 1];
             lastProfile.grade = lastProfile.rank;
-        }
-        
+        }      
     }
-
-//     function addProfile(profile, oneShot = false) {
-//     // clone profond d’entrée
-//     let clone = JSON.parse(JSON.stringify(profile));
-
-//     clone.archive = clone.name;
-//     clone.oldWeapons = [...clone.weapons];
-//     clone.equipment = [];
-//     clone.oldSpecialRules = [...clone.specialRule];
-//     clone.oldEndurance = clone.endurance;
-//     clone.oldMove = clone.move;
-
-//     if (faction.name === 'Fortune' && !clone.specialRule.includes("Clandestinité")) {
-//         clone.specialRule = clone.specialRule + " Clandestinité";
-//     }
-//     if (faction.name === 'Putrescence' && clone.type === 'blindé') {
-//         clone.grade = clone.rank;
-//     }
-
-//     squad.value.profiles.push(clone);
-
-//     if (faction.name === 'Égalité' && clone.name.includes('Igualdad Soldado') && oneShot === false) {
-//         addProfile(clone, true);
-//     }
-// }
-
+    /** Retire le profil indexé de la liste de profils de l'escouade */
     function removeProfile(index) {
         squad.value.profiles.splice(index, 1);
     }
+    /** Réinitialise le profil, redonne les propriétés originelles */
     function resetProfile(profile) {
         profile.name = profile.archive;
         profile.weapons = [...profile.oldWeapons];
@@ -312,28 +438,13 @@ import SpecialRules from "../components/SpecialRules.vue";
         profile.move = profile.oldMove;
         profile.meleeHeroe = null;
     }
-
-//     function resetProfile(profile) {
-//     profile.name = profile.archive;
-//     profile.weapons = [...profile.oldWeapons];
-//     profile.grade = 0;
-//     profile.specialRoles = [];
-//     profile.equipment = [];
-//     profile.specialRule = [...profile.oldSpecialRules]; // ← clone pour éviter référence
-//     profile.endurance = profile.oldEndurance;
-//     profile.move = profile.oldMove;
-//     profile.meleeHeroe = null;
-// }
-
-
+    /** Calcule le coût en équipement global sur l'Escouade */
     function getEquipmentCost() {
         let points = 0;
         let distributed = 0;
-
         squad.value.profiles.forEach( p => {
             const count = p.equipment?.length ?? 0;
             const rank = p.rank ?? 1;
-
             if(count > 0) {
                 if(rank === 1) {
                     distributed += count / 3;
@@ -344,11 +455,16 @@ import SpecialRules from "../components/SpecialRules.vue";
                 }
             }
         });
-
         points = Math.ceil(distributed);
         return points;
     }
 
+
+    /*
+    *********************************
+    * HOOKS VueJS sur CYCLES DE VIE *
+    *********************************
+    */
     onMounted(() => {
         window.addEventListener('resize', updateIsMobile);
     });
@@ -357,13 +473,22 @@ import SpecialRules from "../components/SpecialRules.vue";
         window.removeEventListener('resize', updateIsMobile);
     });
 
+
+    /*
+    ******************
+    * IMPRESSION PDF *
+    ******************
+    */
+
+    /**
+     * Précharge toutes les images (y compris SVG → PNG) pour éviter
+     * les erreurs de rendu avant export PDF.
+     */
     function preloadImages(element) {
         const images = element.querySelectorAll("img");
         const promises = [];
-
         images.forEach(img => {
             const isSVG = img.src.endsWith(".svg") || img.src.includes(".svg");
-
             if (isSVG) {
                 // Convertir en PNG via canvas
                 promises.push(
@@ -378,12 +503,10 @@ import SpecialRules from "../components/SpecialRules.vue";
                             canvas.height = svgImg.height || 64;
                             const ctx = canvas.getContext("2d");
                             ctx.drawImage(svgImg, 0, 0);
-
                             // Remplacer le src de l'image originale par un PNG base64
                             img.src = canvas.toDataURL("image/png");
                             resolve();
                         };
-
                         svgImg.onerror = () => {
                             console.warn("Échec de chargement SVG :", img.src);
                             resolve();
@@ -399,30 +522,15 @@ import SpecialRules from "../components/SpecialRules.vue";
                 );
             }
         });
-
         return Promise.all(promises);
     }
 
-
-    
-
-
-
+    /** Génère le PDF de l’escouade avec `html2pdf.js`. */
     async function print() {
         const element = printArea.value;
         if (!element) return;
-
         element.style.display = "block";
-
         await preloadImages(element); // 👈 attend que toutes les images soient chargées
-
-        // const opt = {
-        //     margin: 0.2,
-        //     filename: squad.value.name + '.pdf',
-        //     image: { type: 'jpeg', quality: 0.98 },
-        //     html2canvas: { scale: 2 },
-        //     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        // };
         const opt = {
             margin: 0.5,
             filename: squad.value.name + '.pdf',
@@ -441,8 +549,6 @@ import SpecialRules from "../components/SpecialRules.vue";
             },
             pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } 
         };
-
-
         html2pdf().set(opt).from(element).save().then(() => {
             element.style.display = "none";
         });
@@ -491,22 +597,6 @@ import SpecialRules from "../components/SpecialRules.vue";
             </div>
         </section>
 
-
-
-
-        <!-- <div ref="printArea" class="printable">
-            <div class="printable-container">
-                <Resume class="printable-container_resume" v-model:squadName="squadName" :is-for-print="isForPrint" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
-                    <div v-for="(profile, i) in squad.profiles" :key="i" class="gallery_block">
-                        <ProfileSheet :profile="profile"  mode="" @delete="removeProfile(i)" :roles="faction.specialties" @reset="resetProfile(profile)" :items="items" />
-                        <div class="print-only">
-                            <p> *** </p>
-                            <div v-if="(i + 1) % 3 === 0" class="force-break"></div>
-                        </div>
-                    </div> 
-            </div>
-        </div> -->
-
         <div ref="printArea" class="printable">
         <div class="printable-container">
             <Resume 
@@ -529,10 +619,6 @@ import SpecialRules from "../components/SpecialRules.vue";
             </div>
         </div>
         </div>
-
-    
-
-
 </template>
 
 <style scoped lang="scss">
@@ -616,59 +702,6 @@ import SpecialRules from "../components/SpecialRules.vue";
         }
 
     }
-
-    // .printable {
-    //     width: 100%;
-    //     max-width: 100%;
-    //     box-sizing: border-box;
-    //     display: none;
-    // }
-    // .printable-container {
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: center;
-    //     width: 100%;
-    //     padding: 20px;
-    //     box-sizing: border-box;
-    //     &_resume {
-    //         display: flex;
-    //         flex-direction: column;
-    //         align-items: center;
-    //         text-align: center;
-    //     }
-    // }
-
-
-
-
-    // .printable-container {
-    //     display: block;
-    // }
-    // .gallery_block {
-    //     width: 100%;
-    //     display: flex;
-    //     justify-content: center;
-    //     margin-bottom: 20px;
-    // }
-    
-    // .print-only {
-    //     display: block;
-    //     text-align: center;
-    //     margin: 10px 0;
-    // }
-    // .force-break {
-    //     // height: 100px; /* Réduit la hauteur pour éviter l'espace blanc */
-    //     // page-break-before: always;
-    // }
-
-
-
-    // .force-break {
-    //     display: block;
-    //     page-break-before: always;
-    //     height: 100px; /* nécessaire pour que html2canvas le prenne en compte */
-    //     visibility: hidden;
-    // }   
 
     /* Zone impression simple: pas de flex ici */
     .printable { display: none; }
