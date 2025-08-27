@@ -1,5 +1,39 @@
-# Vue 3 + Vite
+# Mars Code Aurora – Army Builder
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 📖 Description
+Application web en **Vue 3** pour créer et gérer des **escouades** dans l’univers du jeu de figurines **Mars Code Aurora**.  
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+Elle permet de :
+- Parcourir les différentes **factions** et leurs profils.
+- Construire une escouade en respectant les règles officielles (coût, officiers, blindés, restrictions spécifiques…).
+- Modifier, équiper et spécialiser les unités.
+- Générer un **PDF imprimable** de l’escouade.
+
+---
+
+## 🚀 Fonctionnalités principales
+- **Navigation claire** : Factions → Faction → Escouade.
+- **Gestion des contraintes** :
+  - Limites de coût en fonction du mode (Blitz, Standard, Héroïque).
+  - Nombre maximum d’officiers.
+  - Restrictions spécifiques (Igualdad, Domination, Fortune, etc.).
+- **Édition avancée des profils** :
+  - Nom, grade, spécialités, équipements.
+  - Options spéciales : Capitaine, Héroïque, Brutal, Structure légère…
+- **Résumé et alertes** : suivi automatique des limites et règles.
+- **Export PDF** via `html2pdf.js`.
+- **Interface responsive** adaptée mobile et desktop.
+
+---
+
+## 🛠️ Stack technique
+- **Framework** : [Vue 3](https://vuejs.org/) (Composition API, `<script setup>`)
+- **Routing** : [Vue Router](https://router.vuejs.org/)
+- **Styling** : [SCSS](https://sass-lang.com/) avec variables globales
+- **Librairies externes** :
+  - [`html2pdf.js`](https://github.com/eKoopmans/html2pdf.js) : génération PDF
+- **Données** : fichier JSON (`armyBook.json`) contenant factions, profils, règles et équipements
+
+---
+
+## 📂 Structure du projet
