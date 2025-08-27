@@ -262,6 +262,10 @@ import SpecialRules from "../components/SpecialRules.vue";
         if(faction.name === 'Égalité' && profile.name.includes('Igualdad Soldado') && oneShot === false) {
             addProfile(profile, true);
         }
+        if(oneShot === true) {
+            const lastProfile = squad.value.profiles[squad.value.profiles.length - 1];
+            lastProfile.cost -= 1;
+        }
         if(profile.specialRule != null && profile.specialRule.includes("Poste mobile")) {
             const lastProfile = squad.value.profiles[squad.value.profiles.length - 1];
             lastProfile.grade = lastProfile.rank;
