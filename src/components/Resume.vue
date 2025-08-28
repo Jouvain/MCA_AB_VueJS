@@ -106,8 +106,10 @@
                 <p class="resume_text">Coût : {{ squadCost }} / {{ squadLimit }}</p>
                 <p class="resume_text">Officiers : {{ squadOfficerNb }} / {{ officerLimit }}</p>                
             </div>
-            <p v-if="!isForPrint" class="resume_text">Coût : {{ squadCost }} / {{ squadLimit }}</p>
-            <p v-if="!isForPrint" class="resume_text">Officiers : {{ squadOfficerNb }} / {{ officerLimit }}</p>
+            <div class="resume_costs--mobile">
+                <p v-if="!isForPrint" class="resume_text">Coût : {{ squadCost }} / {{ squadLimit }}</p>
+                <p v-if="!isForPrint" class="resume_text">Officiers : {{ squadOfficerNb }} / {{ officerLimit }}</p>
+            </div>
         </div>
         <button v-if="!isForPrint" @click="isEditing = !isEditing" class="resume_btn">Modifier le nom</button>
         <div class="resume_edition">
@@ -131,10 +133,13 @@
             color: $color--mca-red;
             font-weight: bold;
             font-size:xx-large;
+            margin-top: 10px;
+            margin-bottom: 0;
             @media screen and (max-width: $breakpointMax-mobile) {
                 font-size: large;
                 justify-content: center;
-                margin-top: $spacing;
+                margin-top: 10px;
+                margin-bottom: 0;
             }    
         }
         &_form {
@@ -157,6 +162,7 @@
             color: $color--mca-red;
             font-weight: bold;
             font-size:xx-large;
+            margin-top: 0;
             @media screen and (max-width: $breakpointMax-mobile) {
                 font-size: large;
                 justify-content: center;
@@ -166,12 +172,13 @@
         &_display {
             display: flex;
             align-items: center;
-            flex-direction: row;
+            flex-direction: column;
             justify-content: space-around;
             width: 50%;
             @media screen and (max-width: $breakpointMax-mobile) {
                 flex-direction: column;
                 justify-content: center;
+                width: 100%;
             }
         }
         &_edition {
@@ -185,6 +192,12 @@
             justify-content: space-around;
             gap: 20px;
             margin-top: 0;
+            &--mobile {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                gap: $spacing;
+            }
         }
         .isForPrint {
             display: flex;

@@ -600,38 +600,44 @@
 </script>
 
 <template>
-    
-        <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
+        <div class="sticky-intel">
+            <Header :title="faction ? faction.name : 'Faction inconnue'"></Header>
 
-        <Alert v-bind:too-much-igualdad="tooMuchIgualdadCost" :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" :too-much-grades="tooMuchGrades" :too-much-blindes="tooMuchBlindes" />
+            <Alert v-bind:too-much-igualdad="tooMuchIgualdadCost" :too-expensive="tooExpensive" :too-much-offciers="tooMuchOffciers" :too-much-grades="tooMuchGrades" :too-much-blindes="tooMuchBlindes" />
 
-        <div class="squad_modes">
-            <div v-for="modeItem in modes" class="squad_mode">
-                <ButtonMode :mode="modeItem" class="squad_button" :class="{'squad_button--active' : mode === modeItem}" @mode="modifyMode" />
+            <div class="squad_modes">
+                <div v-for="modeItem in modes" class="squad_mode">
+                    <ButtonMode :mode="modeItem" class="squad_button" :class="{'squad_button--active' : mode === modeItem}" @mode="modifyMode" />
+                </div>
+            </div>
+
+            <Resume v-model:squadName="squadName" :faction="faction.name" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
+            <Captain v-if="captain != null" :captain="captain" />
+
+
+            <div class="squad_actions">
+                <div class="print">
+                    <button class="print_btn" @click="print">&#x1F5A8</button>
+                </div>
+
+                <div class="mobile-toggle" v-if="isMobile">
+                    <button @click="activePanel = (activePanel === 'faction' ? 'roster' : 'faction')">
+                        {{ activePanel === 'faction' ? '→ Escouade' : '← Faction' }}
+                    </button>
+                </div>
+            </div>
+
+
+            <div v-if="faction.name === 'Fortune'" class="squad_modes squad_modes--filters">
+                <div v-for="originalFaction in originalFactionsCalcul" class="squad_mode">
+                    <ButtonMode :mode="originalFaction" class="squad_button" :class="{'squad_button--active' : chosenOriginalFaction === originalFaction}" @mode="modifyChosenFaction" />
+                </div>
             </div>
         </div>
 
-        <Resume v-model:squadName="squadName" :faction="faction.name" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
-        <Captain v-if="captain != null" :captain="captain" />
+        
 
 
-
-        <div class="print">
-            <button class="print_btn" @click="print">&#x1F5A8</button>
-        </div>
-
-        <div v-if="faction.name === 'Fortune'" class="squad_modes squad_modes--filters">
-            <div v-for="originalFaction in originalFactionsCalcul" class="squad_mode">
-                <ButtonMode :mode="originalFaction" class="squad_button" :class="{'squad_button--active' : chosenOriginalFaction === originalFaction}" @mode="modifyChosenFaction" />
-            </div>
-        </div>
-
-
-        <div class="mobile-toggle" v-if="isMobile">
-            <button @click="activePanel = (activePanel === 'faction' ? 'roster' : 'faction')">
-                {{ activePanel === 'faction' ? '→ Escouade' : '← Faction' }}
-            </button>
-        </div>
 
         <section class="panels">
             <div class="panels_wrapper" v-show="!isMobile || activePanel === 'faction' ">
@@ -838,9 +844,10 @@
                 padding: $spacing 0;
                 @media screen and (max-width: $breakpointMax-mobile) {
                     display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
-                    gap: 20px;
-                    padding: 20px;
+                    grid-template-columns: 1fr 1fr 1fr 1fr;
+                    gap: 0;
+                    padding: 5px 20px;
+                    margin-top: 0;
                 }
             }
         }
@@ -857,7 +864,28 @@
                 color: $color--light;
                 font-weight: bold;
             }
+            @media screen and (max-width: $breakpointMax-mobile) {
+                width: 90px;
+            }
         }
+        &_actions {
+            @media screen and (max-width:$breakpointMax-mobile) {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                button {
+                    height: 50px;
+                }
+            }
+        }
+    }
+    .sticky-intel {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: $color--light;
+        // padding-bottom: $spacing;
     }
 
 

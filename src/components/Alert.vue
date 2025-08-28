@@ -68,6 +68,10 @@
             color: $color--mca-red;
             font-weight: bold;
             font-size: larger;
+            margin: 0;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                margin: 0;
+            }
         }
         &_details {
             display: flex;
@@ -75,12 +79,16 @@
             @media screen and (max-width: $breakpointMax-mobile) {
                 flex-direction: column;
                 align-items: center;
+                margin-bottom: 0;
             }
         }
         &_detail {
             margin: $spacing;
             margin-top: 0;
             font-weight: bold;
+            @media screen and (max-width: $breakpointMax-mobile) {
+                margin-bottom: 0;
+            }
         }
     }
 </style>

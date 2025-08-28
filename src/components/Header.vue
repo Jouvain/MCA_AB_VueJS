@@ -26,7 +26,7 @@
 
 <template>
   <header class="mca-header">
-    <h1 class="mca-header__title">Mars Code Aurora : constructeur d'escouade</h1>
+    <!-- <h1 class="mca-header__title">Mars Code Aurora</h1> -->
     <div class="mca-header__wrapper">
       <div class="mca-header__bar">
         <router-link to="/factions" class="mca-header__logo-link">
