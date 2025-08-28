@@ -611,12 +611,6 @@
             </div>
         </div>
 
-        <div v-if="faction.name === 'Fortune'" class="squad_modes">
-            <div v-for="originalFaction in originalFactionsCalcul" class="squad_mode">
-                <ButtonMode :mode="originalFaction" class="squad_button" :class="{'squad_button--active' : chosenOriginalFaction === originalFaction}" @mode="modifyChosenFaction" />
-            </div>
-        </div>
-
         <Resume v-model:squadName="squadName" :faction="faction.name" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
         <Captain v-if="captain != null" :captain="captain" />
 
@@ -624,6 +618,12 @@
 
         <div class="print">
             <button class="print_btn" @click="print">&#x1F5A8</button>
+        </div>
+
+        <div v-if="faction.name === 'Fortune'" class="squad_modes squad_modes--filters">
+            <div v-for="originalFaction in originalFactionsCalcul" class="squad_mode">
+                <ButtonMode :mode="originalFaction" class="squad_button" :class="{'squad_button--active' : chosenOriginalFaction === originalFaction}" @mode="modifyChosenFaction" />
+            </div>
         </div>
 
 
@@ -830,6 +830,19 @@
             justify-content: space-around;
             align-items: center;
             margin-top: $spacing;
+            &--filters {
+                justify-content: center;
+                gap: $spacing;
+                border-top: 2px solid $color--mca-red;
+                border-bottom: 2px solid $color--mca-red;
+                padding: $spacing 0;
+                @media screen and (max-width: $breakpointMax-mobile) {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    gap: 20px;
+                    padding: 20px;
+                }
+            }
         }
         &_button {
             background-color: $color--mca-tertiary;
