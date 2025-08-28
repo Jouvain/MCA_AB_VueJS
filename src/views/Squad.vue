@@ -88,6 +88,9 @@
      */
     const items = dataFactions.items;
 
+
+    
+
     /*
     ***********************
     * VARIABLES REACTIVES *
@@ -335,6 +338,46 @@
     });
 
 
+    // ********* Gestion des FILTRES pour la FORTUNE **********
+    /**
+     * Liste de factions d'origine SI faction en Fortune
+     */
+    const originalFactionsCalcul = computed(()  => {
+        if(faction.name === 'Fortune') {
+            let uniqueFactions = new Set();
+            faction.profiles.forEach(profile => {
+                uniqueFactions.add(profile.originalFaction);
+            })
+            return uniqueFactions;
+        } else {
+            return []
+        }
+    });
+
+    const chosenOriginalFaction = ref(null);
+    
+    /**
+     * Attribue une "faction choisie" pour filtrer les profils 
+    */
+    function modifyChosenFaction(newFaction) {
+        if(chosenOriginalFaction.value === newFaction) {
+            chosenOriginalFaction.value = null;
+        } else {
+            chosenOriginalFaction.value = newFaction;
+        }
+    }
+
+    /**
+     * Liste de profils disponibles en fonction de FORTUNE
+     * @type {array}
+    */
+    const filteredProfiles = computed(() => {
+        if (!chosenOriginalFaction.value) return faction.profiles;
+        return faction.profiles.filter(
+            p => p.originalFaction === chosenOriginalFaction.value
+        );
+    });
+
     /*
     ********************
     * FONCTIONS METIER *
@@ -568,6 +611,12 @@
             </div>
         </div>
 
+        <div v-if="faction.name === 'Fortune'" class="squad_modes">
+            <div v-for="originalFaction in originalFactionsCalcul" class="squad_mode">
+                <ButtonMode :mode="originalFaction" class="squad_button" :class="{'squad_button--active' : chosenOriginalFaction === originalFaction}" @mode="modifyChosenFaction" />
+            </div>
+        </div>
+
         <Resume v-model:squadName="squadName" :faction="faction.name" :squad-cost="totalCost" :squad-officer-nb="officerNb" :chosen-mode="mode" />
         <Captain v-if="captain != null" :captain="captain" />
 
@@ -586,7 +635,7 @@
 
         <section class="panels">
             <div class="panels_wrapper" v-show="!isMobile || activePanel === 'faction' ">
-                <div v-for="(profile, i) in faction.profiles" :key="i" class="gallery_block">
+                <div v-for="(profile, i) in filteredProfiles" :key="i" class="gallery_block">
                     <ProfileSheet :profile="profile"  mode="add" @add="addProfile(profile)"/>
                 </div>
             </div>
@@ -596,6 +645,7 @@
                 </div>
             </div>
         </section>
+
 
         <div ref="printArea" class="printable">
         <div class="printable-container">
